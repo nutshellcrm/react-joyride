@@ -1,0 +1,325 @@
+/*
+
+Listing of custom-properties and their default values:
+
+--joyride-color, #f04
+--joyride-overlay-color, rgba(0, 0, 0, 0.5)
+--joyride-zindex, 1500
+
+--joyride-beacon-size, 36px
+--joyride-beacon-color, var(--joyride-color, #f04)
+
+--joyride-hole-border-radius, 4px
+--joyride-hole-shadow, 0 0 15px rgba(0, 0, 0, 0.5)
+
+--joyride-tooltip-arrow-size, 36px
+--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2)
+--joyride-tooltip-arrow-scale, 2.25 // = --joyride-tooltip-arrow-size / 16
+--joyride-tooltip-bg-color, #fff
+--joyride-tooltip-border-radius, 4px
+--joyride-tooltip-color, #555
+--joyride-tooltip-font-size, 16px
+--joyride-tooltip-padding, 20px
+--joyride-tooltip-shadow-x, 1px
+--joyride-tooltip-shadow-y, 2px
+--joyride-tooltip-shadow-blur, 3px
+--joyride-tooltip-shadow-color, rgba(0, 0, 0, 0.3)
+
+--joyride-tooltip-width-narrow, 290px
+--joyride-tooltip-width-medium, 360px
+--joyride-tooltip-width-wide, 450px
+
+--joyride-tooltip-animation, joyride-tooltip 0.4s forwards
+--joyride-tooltip-animation-timing, cubic-bezier(0, 1.05, 0.55, 1.18)
+
+--joyride-close-color, color(var(--joyride-tooltip-color, #555) alpha(0.5))
+--joyride-close-size, 30px
+--joyride-close-top, 10px
+--joyride-close-right, 10px
+--joyride-close-display, block // Set to "none" to hide
+
+--joyride-header-color, var(--joyride-tooltip-color, #555)
+--joyride-header-font-size, 20px
+--joyride-header-border-color, var(--joyride-color, #f04)
+--joyride-header-border-width, 1px
+
+--joyride-button-bg-color, var(--joyride-color, #f04)
+--joyride-button-color, #fff
+--joyride-button-radius, 4px
+
+--joyride-back-button-color, var(--joyride-color, #f04)
+--joyride-skip-button-color, #ccc
+ */
+
+
+.joyride-beacon {
+  display: inline-block;
+  height: var(--joyride-beacon-size, 36px);
+  position: relative;
+  width: var(--joyride-beacon-size, 36px);
+  z-index: var(--joyride-zindex, 1500);
+}
+
+.joyride-beacon__inner {
+  animation: joyride-beacon-inner 1.2s infinite ease-in-out;
+  background-color: var(--joyride-beacon-color, var(--joyride-color, #f04));
+  border-radius: 50%;
+  display: block;
+  height: 50%;
+  left: 50%;
+  opacity: 0.7;
+  position: relative;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+}
+
+.joyride-beacon__outer {
+  animation: joyride-beacon-outer 1.2s infinite ease-in-out;
+  background-color: color(var(--joyride-beacon-color, var(--joyride-color, #f04)) alpha(0.2));
+  border: calc(var(--joyride-beacon-size, 36px) / 18) solid color(var(--joyride-beacon-color, var(--joyride-color, #f04)));
+  border-radius: 50%;
+  display: block;
+  height: 100%;
+  left: 0;
+  opacity: 0.9;
+  position: absolute;
+  top: 0;
+  transform: translateY(-50%);
+  transform-origin: center;
+  width: 100%;
+}
+
+.joyride-overlay {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: var(--joyride-zindex, 1500);
+}
+
+.joyride-hole {
+  border-radius: var(--joyride-hole-border-radius, 4px);
+  box-shadow: 0 0 0 9999px var(--joyride-overlay-color, rgba(0, 0, 0, 0.5)), var(--joyride-hole-shadow, 0 0 15px rgba(0, 0, 0, 0.5));
+  position: absolute;
+}
+
+.joyride-hole.safari {
+  box-shadow: 0 0 999px 9999px var(--joyride-overlay-color, rgba(0, 0, 0, 0.5)), var(--joyride-hole-shadow, 0 0 15px rgba(0, 0, 0, 0.5));
+}
+
+.joyride-tooltip {
+  background-color: var(--joyride-tooltip-bg-color, #fff);
+  border-radius: var(--joyride-tooltip-border-radius, 4px);
+  color: var(--joyride-tooltip-color, #555);
+  cursor: default;
+  filter: drop-shadow(calc(0px - var(--joyride-tooltip-shadow-x, 1px)) calc(0px - var(--joyride-tooltip-shadow-y, 2px)) calc(0px var(--joyride-tooltip-shadow-blur, 3px)) var(--joyride-tooltip-shadow-color, rgba(0, 0, 0, 0.3))) drop-shadow(var(--joyride-tooltip-shadow-x, 1px) var(--joyride-tooltip-shadow-y, 2px) var(--joyride-tooltip-shadow-blur, 3px) var(--joyride-tooltip-shadow-color, rgba(0, 0, 0, 0.3)));
+  opacity: 0;
+  padding: var(--joyride-tooltip-padding, 20px);
+  transform: translate3d(0, 0, 0);
+  width: var(--joyride-tooltip-width-narrow, 290px);
+  z-index: calc(var(--joyride-zindex, 1500) + 10);
+}
+
+@media screen and (min-width: 480px) {
+  .joyride-tooltip {
+    width: var(--joyride-tooltip-width-med, 360px);
+  }
+}
+
+@media screen and (min-width: 960px) {
+  .joyride-tooltip {
+    width: var(--joyride-tooltip-width-wide, 450px);
+  }
+}
+
+.joyride-tooltip--animate {
+  animation: var(--joyride-tooltip-animation, joyride-tooltip 0.4s forwards);
+  animation-timing-function: cubic-bezier(0, 1.05, 0.55, 1.18);
+}
+
+.joyride-tooltip__triangle {
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.joyride-tooltip.bottom, .joyride-tooltip.bottom-left, .joyride-tooltip.bottom-right {
+  margin-top: var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2));
+}
+
+.joyride-tooltip.bottom .joyride-tooltip__triangle, .joyride-tooltip.bottom-left .joyride-tooltip__triangle, .joyride-tooltip.bottom-right .joyride-tooltip__triangle {
+  background-image: url('<svg width="var(--joyride-tooltip-arrow-size, 36px)" height="var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2))" version="1.1" xmlns="http://www.w3.org/2000/svg"><polygon points="0, 0 8, 8 16,0" fill="var(--joyride-tooltip-bg-color, #fff)" transform="scale(var(--joyride-tooltip-arrow-scale, 2.25)) rotate(180 8 4)"></polygon></svg>');
+  height: var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2));
+  left: 50%;
+  top: calc(0px - var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2)) - 2);
+  transform: translateX(-50%);
+  width: var(--joyride-tooltip-arrow-size, 36px);
+}
+
+.joyride-tooltip.top, .joyride-tooltip.top-left, .joyride-tooltip.top-right {
+  margin-bottom: var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2));
+}
+
+.joyride-tooltip.top .joyride-tooltip__triangle, .joyride-tooltip.top-left .joyride-tooltip__triangle, .joyride-tooltip.top-right .joyride-tooltip__triangle {
+  background-image: url('<svg width="var(--joyride-tooltip-arrow-size, 36px)" height="var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2))" version="1.1" xmlns="http://www.w3.org/2000/svg"><polygon points="0, 0 8, 8 16,0" fill="var(--joyride-tooltip-bg-color, #fff)" transform="scale(var(--joyride-tooltip-arrow-scale, 2.25)) rotate(0)"></polygon></svg>');
+  bottom: calc(0px - var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2)) + 2px);
+  height: var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2));
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--joyride-tooltip-arrow-size, 36px);
+}
+
+.joyride-tooltip.bottom-left .joyride-tooltip__triangle, .joyride-tooltip.top-left .joyride-tooltip__triangle {
+  left: 3%;
+  transform: translateX(0);
+}
+
+@media screen and (min-width: 480px) {
+  .joyride-tooltip.bottom-left .joyride-tooltip__triangle, .joyride-tooltip.top-left .joyride-tooltip__triangle {
+    left: 2%;
+  }
+}
+
+.joyride-tooltip.bottom-right .joyride-tooltip__triangle, .joyride-tooltip.top-right .joyride-tooltip__triangle {
+  left: auto;
+  right: 3%;
+  transform: translateX(0);
+}
+
+@media screen and (min-width: 480px) {
+  .joyride-tooltip.bottom-right .joyride-tooltip__triangle, .joyride-tooltip.top-right .joyride-tooltip__triangle {
+    right: 2%;
+  }
+}
+
+.joyride-tooltip.left {
+  margin-right: var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2));
+}
+
+.joyride-tooltip.left .joyride-tooltip__triangle {
+  background-image: url('<svg width="var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2))" height="var(--joyride-tooltip-arrow-size, 36px)" version="1.1" xmlns="http://www.w3.org/2000/svg"><polygon points="0, 0 8, 8 16,0" fill="var(--joyride-tooltip-bg-color, #fff)" transform="scale(var(--joyride-tooltip-arrow-scale, 2.25)) rotate(270 8 8)"></polygon></svg>');
+  height: var(--joyride-tooltip-arrow-size, 36px);
+  right: calc(0px - var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2)) + 2px);
+  width: var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2));
+}
+
+.joyride-tooltip.right {
+  margin-left: var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2));
+}
+
+.joyride-tooltip.right .joyride-tooltip__triangle {
+  background-image: url('<svg width="var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2))" height="var(--joyride-tooltip-arrow-size, 36px)" version="1.1" xmlns="http://www.w3.org/2000/svg"><polygon points="0, 0 8, 8 16,0" fill="var(--joyride-tooltip-bg-color, #fff)" transform="scale(var(--joyride-tooltip-arrow-scale, 2.25)) rotate(90 4 4)"></polygon></svg>');
+  height: var(--joyride-tooltip-arrow-size, 36px);
+  left: calc(0px - var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2)) + 2px);
+  width: var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2));
+}
+
+.joyride-tooltip__close {
+  color: var(--joyride-close-color, color(var(--joyride-tooltip-color, #555) alpha(0.5)));
+  font-size: var(--joyride-close-size, 30px);
+  line-height: 12px;
+  position: absolute;
+  right: var(--joyride-close-right, 10px);
+  text-decoration: none;
+  top: var(--joyride-close-top, 10px);
+  z-index: 10;
+  display: var(--joyride-close-display, block);
+}
+
+.joyride-tooltip__close:hover, .joyride-tooltip__close:focus {
+  color: color(var(--joyride-close-color, color(var(--joyride-tooltip-color, #555) alpha(0.5))) lightness(-10%));
+  outline: none;
+  text-decoration: none;
+}
+
+.joyride-tooltip__close--header {
+  right: var(--joyride-tooltip-padding, 20px);
+  top: var(--joyride-tooltip-padding, 20px);
+}
+
+.joyride-tooltip__header {
+  border-bottom: var(--joyride-header-border-width, 1px) solid var(--joyride-header-border-color, var(--joyride-color, #f04));
+  color: var(--joyride-header-color, var(--joyride-tooltip-color, #555));
+  font-size: var(--joyride-header-font-size, 20px);
+  padding-bottom: 6px;
+  position: relative;
+}
+
+.joyride-tooltip__main {
+  font-size: var(--joyride-tooltip-font-size, 16px);
+  padding: 12px 0 18px;
+}
+
+.joyride-tooltip__footer {
+  text-align: right;
+}
+
+.joyride-tooltip__button--primary {
+  background-color: var(--joyride-button-bg-color, var(--joyride-color, #f04));
+  border-radius: var(--joyride-button-radius, 4px);
+  color: var(--joyride-button-color, #fff);
+  outline: none;
+  padding: 6px 12px;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.joyride-tooltip__button--primary:active, .joyride-tooltip__button--primary:focus, .joyride-tooltip__button--primary:hover {
+  background-color: color(var(--joyride-button-bg-color, var(--joyride-color, #f04)) lightness(+6%));
+  color: var(--joyride-button-color, #fff);
+  text-decoration: none;
+}
+
+.joyride-tooltip__button--secondary {
+  color: var(--joyride-back-button-color, var(--joyride-color, #f04));
+  margin-right: 10px;
+  outline: none;
+}
+
+.joyride-tooltip__button--skip {
+  color: var(--joyride-skip-button-color, #ccc);
+  float: left;
+  margin-right: 10px;
+}
+
+.joyride-tooltip--standalone .joyride-tooltip__main {
+  padding-bottom: 0;
+}
+
+.joyride-tooltip--standalone .joyride-tooltip__footer {
+  display: none;
+}
+
+@keyframes joyride-tooltip {
+  0% {
+    transform: scale(0.1);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1px) scale(1);
+  }
+}
+
+@keyframes joyride-beacon-inner {
+  20% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes joyride-beacon-outer {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    opacity: 0.7;
+    transform: scale(0.75);
+  }
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
