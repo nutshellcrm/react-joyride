@@ -74,8 +74,10 @@ gulp.task('lint', function() {
 });
 
 gulp.task('styles', function() {
-  return gulp.src('src/styles/*.scss')
+  const sassFilter = $.filter('**/*.scss');
+  return gulp.src('src/styles/*')
     .pipe(gulp.dest('lib/styles'))
+    .pipe(sassFilter)
     .pipe($.plumber())
     .pipe($.sass.sync({
       precision: 4

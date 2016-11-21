@@ -48,6 +48,19 @@ If you are using **SCSS** (and you should):
 
 ```
 
+Alternatively, there is a version of the stylesheet using some proposed specifications for [CSS Custom Properties for Cascading Variables Module Level 1](https://drafts.csswg.org/css-variables/) and [CSS Color Module Level 4](https://drafts.csswg.org/css-color).  These are draft specifications and are not yet well supported in browsers, but you are able to use [PostCSS-cssnext](http://cssnext.io/) to use this new syntax today.  In particular, you will need:  
+
+- [postcss-custom-properties](https://github.com/postcss/postcss-custom-properties)
+- [postcss-color-function](https://github.com/postcss/postcss-color-function)
+- [postcss-base64](https://github.com/jelmerdemaat/postcss-base64) (not part of cssnext, but unfortunately needed here)
+
+You can override any of the custom-properties in [CSSNext Options](#cssnext-options) by defining them in your `:root`.
+
+```js
+import "react-joyride/lib/styles/react-joyride.css";
+// Make sure to configure your bundler to run this through postcss
+```
+
 Or include this directly in your html:
 
 ```html
@@ -349,6 +362,56 @@ Example:
 - `$joyride-skip-button-color`: Defaults to `#ccc`
 - `$joyride-close`: Sass list for the close button: Defaults to `(color: rgba($joyride-tooltip-color, 0.5), size: 30px, top: 10px, right: 10px)`
 - `$joyride-close-visible`: Default to `true`;
+
+## CSSNext Options
+
+#### Basic
+
+- `--joyride-color`: The base color. Defaults to `#f04`
+- `--joyride-zindex`: Defaults to `1500`
+- `--joyride-overlay-color`: Defaults to `rgba(0, 0, 0, 0.5)`
+- `--joyride-beacon-color`: Defaults to `--joyride-color`
+- `--joyride-beacon-size`: Defaults to `36px`
+- `--joyride-hole-border-radius`: Defaults to `4px`
+- `--joyride-hole-shadow`: Defaults to `0 0 15px rgba(0, 0, 0, 0.5)`
+
+#### Tooltip
+
+- `--joyride-tooltip-arrow-size`: You must use even numbers to avoid half-pixel inconsistencies. Defaults to `36px`
+- `--joyride-tooltip-arrow-height`: Defaults to `--joyride-tooltip-arrow-size / 2`
+- `--joyride-tooltip-arrow-scale`: Defaults to `2.25` (--joyride-tooltip-arrow-size / 16)
+- `--joyride-tooltip-bg-color`: Defaults to `#fff`
+- `--joyride-tooltip-border-radius`: Defaults to `4px`
+- `--joyride-tooltip-color`: The header and text color. Defaults to `#555`
+- `--joyride-tooltip-font-size`: Defaults to `16px`
+- `--joyride-tooltip-padding`: Defaults to `20px`
+- `--joyride-tooltip-shadow-x`: Defaults to `1px`
+- `--joyride-tooltip-shadow-y`: Defaults to `2px`
+- `--joyride-tooltip-shadow-blur`: Defaults to `3px`
+- `--joyride-tooltip-shadow-color`: Defaults to `rgba(0, 0, 0, 0.3)`
+- `--joyride-tooltip-width-narrow`: Breakpoint for mobile size. Defaults to `290px`
+- `--joyride-tooltip-width-medium`: Breakpoint for tablet size. Defaults to `360px`
+- `--joyride-tooltip-width-wide`: Breakpoint for desktop size. Defaults to `450px`
+- `--joyride-tooltip-animation`: Defaults to `joyride-tooltip 0.4s forwards`
+- `--joyride-tooltip-animation-timing`: Defaults to `cubic-bezier(0, 1.05, 0.55, 1.18)`
+
+- `--joyride-close-color`: Defaults to `color(var(--joyride-tooltip-color, #555) alpha(0.5))`
+- `--joyride-close-size`: Defaults to `30px`
+- `--joyride-close-top`: Defaults to `10px`
+- `--joyride-close-right`: Defaults to `10px`
+- `--joyride-close-display`: Display property of close button. Defaults to `block`. Set to "none" to hide
+
+- `--joyride-header-color`: Defaults to `--joyride-tooltip-color`
+- `--joyride-header-font-size`: Defaults to `20px`
+- `--joyride-header-border-color`: Defaults to `--joyride-color,`
+- `--joyride-header-border-width`: Defaults to `1px`
+
+- `--joyride-button-bg-color`: defaults to `--joyride-color`
+- `--joyride-button-color`: defaults to `#fff`
+- `--joyride-button-radius`: defaults to `4px`
+
+- `--joyride-back-button-color`: defaults to `--joyride-color`
+- `--joyride-skip-button-color`: defaults to `#ccc`
 
 ## License
 
