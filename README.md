@@ -87,4 +87,3 @@ export class App extends React.Component {
 [Migration from 1.x](docs/migration.md)
 
 This library uses [react-floater](https://github.com/gilbarbara/react-floater) and [popper.js](https://github.com/FezVrasta/popper.js) for positioning and styling.
-
