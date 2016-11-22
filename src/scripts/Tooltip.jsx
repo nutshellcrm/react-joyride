@@ -46,6 +46,10 @@ export default class JoyrideTooltip extends React.Component {
 
   componentDidMount() {
     this.forceUpdate(this.props.onRender);
+
+    if (this.props.showOverlay) {
+      document.addEventListener('mousemove', this.handleMouseMove, false);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -86,6 +90,10 @@ export default class JoyrideTooltip extends React.Component {
     if (prevProps.step.selector !== step.selector) {
       this.forceUpdate(onRender);
     }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousemove', this.handleMouseMove, false);
   }
 
   getArrowPosition(position) {
@@ -300,6 +308,20 @@ export default class JoyrideTooltip extends React.Component {
     return opts;
   }
 
+  handleMouseMove = (e) => {
+    const event = e || window.e;
+    const hole = this.state.styles.hole;
+    const inHoleHeight = (event.pageY >= hole.top && event.pageY <= hole.top + hole.height);
+    const inHoleWidth = (event.pageX >= hole.left && event.pageX <= hole.left + hole.width);
+    const inHole = inHoleWidth && inHoleHeight;
+    if (inHole && !this.state.mouseOverHole) {
+      this.setState({ mouseOverHole: true });
+    }
+    if (!inHole && this.state.mouseOverHole) {
+      this.setState({ mouseOverHole: false });
+    }
+  };
+
   render() {
     const { buttons, disableOverlay, onClick, showOverlay, step, type } = this.props;
 
@@ -390,13 +412,16 @@ export default class JoyrideTooltip extends React.Component {
       return output.tooltipComponent;
     }
 
+    const overlayStyles = {
+      cursor: disableOverlay ? 'default' : 'pointer',
+      height: document.body.clientHeight,
+      pointerEvents: this.state.mouseOverHole ? 'none' : 'auto',
+    };
+
     return (
       <div
         className="joyride-overlay"
-        style={{
-          cursor: disableOverlay ? 'default' : 'pointer',
-          height: document.body.clientHeight
-        }}
+        style={overlayStyles}
         data-type="close"
         onClick={!disableOverlay ? onClick : undefined}>
         {output.hole}
