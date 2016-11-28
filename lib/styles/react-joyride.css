@@ -80,6 +80,7 @@ Listing of custom-properties and their default values:
   border: calc(var(--joyride-beacon-size, 36px) / 18) solid color(var(--joyride-beacon-color, var(--joyride-color, #f04)));
   border-radius: 50%;
   display: block;
+  box-sizing: border-box;
   height: 100%;
   left: 0;
   opacity: 0.9;
