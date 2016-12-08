@@ -401,6 +401,7 @@ export default class JoyrideTooltip extends React.Component {
         <div className="joyride-tooltip__footer">
           {output.skip}
           {output.secondary}
+          {buttons.custom}
           <a
             href="#"
             className="joyride-tooltip__button joyride-tooltip__button--primary"

@@ -268,6 +268,7 @@ There are a few usable options but you can pass custom parameters.
 - `selector`: The target DOM selector of your feature **(required)**
 - `position`: Relative position of you beacon and tooltip. It can be one of these:`top`, `top-left`, `top-right`, `bottom`, `bottom-left`, `bottom-right`, `right` and `left`. This defaults to `top`.
 - `type`: The event type that trigger the tooltip: `click` or `hover`. Defaults to `click`
+- `customButton`: A custom element (JSX) to render between the secondary button ("back") and the primary button.  You are responsible for all content and styling of this element.
 
 Extra option for standalone tooltips
 

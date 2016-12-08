@@ -801,7 +801,8 @@ export default class Joyride extends React.Component {
     const cssPosition = target ? target.style.position : null;
     const shouldShowOverlay = state.tooltip ? false : showOverlay;
     const buttons = {
-      primary: locale.close
+      primary: locale.close,
+      custom: currentStep.customButton,
     };
 
     let component;
