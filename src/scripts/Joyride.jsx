@@ -509,16 +509,6 @@ export default class Joyride extends React.Component {
   onClickBeacon(e) {
     e.preventDefault();
     const state = this.state;
-    const { callback, steps } = this.props;
-
-    if (typeof callback === 'function') {
-      callback({
-        action: 'beacon',
-        type: 'step:before',
-        step: steps[state.index]
-      });
-    }
-
     this.toggleTooltip(true, state.index);
   }
 
@@ -586,15 +576,23 @@ export default class Joyride extends React.Component {
   toggleTooltip(show, index, action) {
     const { callback, completeCallback, stepCallback, steps } = this.props;
     let newIndex = (index !== undefined ? index : this.state.index);
-    const step = steps[newIndex];
+    const newStep = steps[newIndex];
 
-    if (step && !document.querySelector(step.selector)) {
-      console.warn('Target not mounted, skipping...', step, action); //eslint-disable-line no-console
+    if (newStep && !document.querySelector(newStep.selector)) {
+      console.warn('Target not mounted, skipping...', newStep, action); //eslint-disable-line no-console
       newIndex += action === 'back' ? -1 : 1;
     }
 
+    if (typeof callback === 'function') {
+      callback({
+        action: 'beacon',
+        type: 'step:before',
+        step: newStep,
+      });
+    }
+
     this.setState({
-      play: steps[newIndex] ? this.state.play : false,
+      play: newStep ? this.state.play : false,
       showTooltip: show,
       index: newIndex,
       position: undefined,
