@@ -22,13 +22,16 @@ export default class Demo extends React.Component {
         },
         {
           title: 'Our Mission',
-          text: 'Or some other marketing bullshit terms',
-          selector: '.mission h2 span',
+          text: 'Can be advanced by clicking an element in an overlay hole.',
+          selector: '.mission button',
           position: 'bottom',
           style: {
             beacon: {
               offsetY: 20
-            }
+            },
+            button: {
+              display: 'none',
+            },
           }
         },
         {
@@ -42,10 +45,12 @@ export default class Demo extends React.Component {
             }
           }
         }
-      ]
+      ],
+      step: 0,
     };
 
     this.onClickStart = this.onClickStart.bind(this);
+    this.handleNextButtonClick = this.handleNextButtonClick.bind(this);
     this.handleJoyrideCallback = this.handleJoyrideCallback.bind(this);
   }
 
@@ -88,6 +93,21 @@ export default class Demo extends React.Component {
     }
   }
 
+  handleNextButtonClick() {
+    if (this.state.step === 1) {
+      this.setState({
+        running: false,
+        step: 2,
+      });
+      // allow the tooltip time to hide before restarting
+      setTimeout(() => {
+        this.setState({
+          running: true,
+        });
+      }, 500);
+    }
+  }
+
   render() {
     return (
       <div className="demo">
@@ -97,6 +117,7 @@ export default class Demo extends React.Component {
           steps={this.state.steps}
           stepIndex={this.state.step}
           scrollToFirstStep={true}
+          disableOverlay={this.state.step === 1}
           callback={this.handleJoyrideCallback}
           debug={false} />
         <div className="hero">
@@ -113,7 +134,7 @@ export default class Demo extends React.Component {
 
         <div className="site__section mission">
           <div className="container">
-            <h2><span>Mission</span></h2>
+            <h2><span>Mission</span></h2><button onClick={this.handleNextButtonClick}>Advance</button>
           </div>
         </div>
         <div className="site__section about">
