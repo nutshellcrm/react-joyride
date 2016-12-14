@@ -745,6 +745,8 @@ class Joyride extends React.Component {
     const step = standaloneTooltip || (steps[index] || {});
     const displayTooltip = standaloneTooltip ? true : showTooltip;
     const target = document.querySelector(step.selector);
+    const targetCssPosition = target ? target.style.position : null;
+    const cssPosition = step ? step.cssPosition : targetCssPosition;
     const placement = {
       x: -1000,
       y: -1000
@@ -761,6 +763,11 @@ class Joyride extends React.Component {
       const offsetY = nested.get(step, 'style.beacon.offsetY') || 0;
       const position = this.calcPosition(step);
       const body = document.body.getBoundingClientRect();
+
+      // if cssPosition is 'fixed', don't subtract the body's top
+      // position as it would push the element below the viewport
+      const bodyTopOffset = (cssPosition && cssPosition === 'fixed') ? 0 : body.top;
+
       const component = this.getElementDimensions(displayTooltip ? '.joyride-tooltip' : '.joyride-beacon');
       const rect = target.getBoundingClientRect();
 
@@ -777,13 +784,13 @@ class Joyride extends React.Component {
 
       // Calculate y position
       if (/^top/.test(position)) {
-        placement.y = (rect.top - body.top) - (displayTooltip ? component.height + tooltipOffset : (component.height / 2) + offsetY);
+        placement.y = (rect.top - bodyTopOffset) - (displayTooltip ? component.height + tooltipOffset : (component.height / 2) + offsetY);
       }
       else if (/^bottom/.test(position)) {
-        placement.y = (rect.top - body.top) + (rect.height - (displayTooltip ? -tooltipOffset : (component.height / 2) - offsetY));
+        placement.y = (rect.top - bodyTopOffset) + (rect.height - (displayTooltip ? -tooltipOffset : (component.height / 2) - offsetY));
       }
       else {
-        placement.y = (rect.top - body.top);
+        placement.y = (rect.top - bodyTopOffset);
       }
 
       if (/^bottom|^top/.test(position)) {
@@ -906,7 +913,8 @@ class Joyride extends React.Component {
     const step = { ...currentStep };
 
     const target = step && step.selector ? document.querySelector(step.selector) : null;
-    const cssPosition = target ? target.style.position : null;
+    const targetCssPosition = target ? target.style.position : null;
+    const cssPosition = step ? step.cssPosition : targetCssPosition;
     const shouldShowOverlay = standaloneTooltip ? false : showOverlay;
     const buttons = {
       primary: locale.close
