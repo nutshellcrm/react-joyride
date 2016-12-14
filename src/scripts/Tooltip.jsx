@@ -195,7 +195,7 @@ export default class JoyrideTooltip extends React.Component {
    * @param {string} opts.arrowPosition      Used for left/right positioing of arrow when on bottom or top
    * @param {Object} opts.rect               BoundingClientRect of target element
    * @param {string} opts.positonBaseClass   Base position of tooltip (top, bottom, left, right)
-   * @param {Object} props                   Positioning properties: cssPosition, xPos, and yPos
+   * @param {Object} props                   Positioning properties: holePadding, step, xPos, and yPos
    * @returns {Object}                       Calculated styles for arrow, buttons, header, hole, and tooltip
    */
   setStyles(stepStyles, opts, props) {
@@ -220,7 +220,8 @@ export default class JoyrideTooltip extends React.Component {
       top: Math.round((opts.rect.top - (isFixed ? 0 : document.body.getBoundingClientRect().top)) - holePadding),
       left: Math.round(opts.rect.left - holePadding),
       width: Math.round(opts.rect.width + (holePadding * 2)),
-      height: Math.round(opts.rect.height + (holePadding * 2))
+      height: Math.round(opts.rect.height + (holePadding * 2)),
+      position: isFixed ? 'fixed' : 'absolute',
     };
     if (isFixed) {
       styles.hole.position = 'fixed';
