@@ -129,6 +129,21 @@ export default class Demo extends React.Component {
     }
   }
 
+  handleNextButtonClick() {
+    if (this.state.step === 1) {
+      this.setState({
+        running: false,
+        step: 2,
+      });
+      // allow the tooltip time to hide before restarting
+      setTimeout(() => {
+        this.setState({
+          running: true,
+        });
+      }, 500);
+    }
+  }
+
   render() {
     return (
       <div className="demo">
