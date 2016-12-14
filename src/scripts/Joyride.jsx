@@ -746,7 +746,7 @@ class Joyride extends React.Component {
     const displayTooltip = standaloneTooltip ? true : showTooltip;
     const target = document.querySelector(step.selector);
     const targetCssPosition = target ? target.style.position : null;
-    const cssPosition = step ? step.cssPosition : targetCssPosition;
+    const cssPosition = step && step.isFixedPosition ? 'fixed' : targetCssPosition;
     const placement = {
       x: -1000,
       y: -1000
@@ -914,7 +914,7 @@ class Joyride extends React.Component {
 
     const target = step && step.selector ? document.querySelector(step.selector) : null;
     const targetCssPosition = target ? target.style.position : null;
-    const cssPosition = step ? step.cssPosition : targetCssPosition;
+    const cssPosition = step && step.isFixedPosition ? 'fixed' : targetCssPosition;
     const shouldShowOverlay = standaloneTooltip ? false : showOverlay;
     const buttons = {
       primary: locale.close
