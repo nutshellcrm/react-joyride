@@ -401,6 +401,19 @@ class Joyride extends React.Component {
   }
 
   /**
+   * Parse the incoming steps
+   *
+   * @deprecated
+   *
+   * @param {Array|Object} steps
+   * @returns {Array}
+   */
+  parseSteps(steps) {
+    this.logger('joyride:parseSteps', 'joyride.parseSteps() is deprecated.  It is no longer necessary to parse steps before providing them to Joyride.', true);
+    return steps;
+  }
+
+  /**
    * Verify that a step is valid
    *
    * @param   {Object}  step - A step object
