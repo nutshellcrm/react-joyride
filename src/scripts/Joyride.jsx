@@ -448,12 +448,12 @@ class Joyride extends React.Component {
 
     this.logger('joyride:addTooltip', ['data:', data]);
 
-    const key = parsedData.trigger || parsedData.selector;
+    const key = data.trigger || sanitizeSelector(data.selector);
     const el = document.querySelector(key);
     if (!el) return;
     el.setAttribute('data-tooltip', JSON.stringify(data));
 
-    const eventType = parsedData.event || 'click';
+    const eventType = data.event || 'click';
     if (eventType === 'hover' && !isTouch) {
       listeners.tooltips[key] = { event: 'mouseenter', cb: this.onClickStandaloneTrigger };
       listeners.tooltips[`${key}mouseleave`] = { event: 'mouseleave', cb: this.onClickStandaloneTrigger };
@@ -964,6 +964,7 @@ class Joyride extends React.Component {
         cssPosition,
         disableOverlay,
         holePadding,
+        selector: sanitizeSelector(step.selector),
         showOverlay: shouldShowOverlay,
         step,
         standalone: Boolean(standaloneTooltip),
