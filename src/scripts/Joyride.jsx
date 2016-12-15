@@ -399,6 +399,7 @@ class Joyride extends React.Component {
    * @returns {Array}
    */
   parseStep(step) {
+    this.checkStepValidity(step);
     const newStep = Object.assign({}, step, { position: step.position || 'top' });
     newStep.selector = sanitizeSelector(step.selector);
     const el = document.querySelector(newStep.selector);
@@ -413,13 +414,37 @@ class Joyride extends React.Component {
   }
 
   /**
+   * Verify that a step is valid
+   *
+   * @param   {Object}  step - A step object
+   * @returns {boolean}        True if the step is valid, false otherwise
+   */
+  checkStepValidity(step) {
+    // Check that the step is the proper type
+    if (!step || typeof step !== 'object' || Array.isArray(step)) {
+      this.logger('joyride:checkStepValidity', 'Did not provide a step object.', true);
+      return false;
+    }
+
+    // Check that all required step fields are present
+    const requiredFields = ['selector', 'text'];
+    function hasRequiredField(requiredField) {
+      const hasField = Boolean(step[requiredField]);
+      if (!hasField) {
+        this.logger('joyride:checkStepValidity', [`Provided a step without the required ${requiredField} property.`, 'Step:', step], true);
+      }
+      return hasField;
+    }
+    return requiredFields.every(hasRequiredField);
+  }
+
+  /**
    * Add standalone tooltip events
    *
    * @param {Object} data - Similar shape to a 'step', but for a single tooltip
    */
   addTooltip(data) {
-    const parsedData = this.parseStep(data);
-    if (!parsedData) return;
+    if (!this.checkStepValidity(data)) return;
 
     this.logger('joyride:addTooltip', ['data:', data]);
 
