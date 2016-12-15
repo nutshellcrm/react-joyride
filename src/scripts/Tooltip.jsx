@@ -16,6 +16,13 @@ export default class JoyrideTooltip extends React.Component {
     onClick: React.PropTypes.func.isRequired,
     onRender: React.PropTypes.func.isRequired,
 
+    // position of tooltip with respect to target
+    position: React.PropTypes.oneOf([
+      'top', 'top-left', 'top-right',
+      'bottom', 'bottom-left', 'bottom-right',
+      'right', 'left',
+    ]).isRequired,
+
     // sanitized selector string
     selector: React.PropTypes.string.isRequired,
 
@@ -65,6 +72,7 @@ export default class JoyrideTooltip extends React.Component {
       animate: nextAnimate,
       standalone: nextStandalone,
       step: nextStep,
+      position: nextPosition,
       cssPosition: nextCssPosition,
       holePadding: nextHolePadding,
       xPos: nextXPos,
@@ -75,6 +83,7 @@ export default class JoyrideTooltip extends React.Component {
       animate,
       standalone,
       step,
+      position,
       cssPosition,
       holePadding,
       xPos,
@@ -86,6 +95,7 @@ export default class JoyrideTooltip extends React.Component {
       nextAnimate !== animate ||
       nextStandalone !== standalone ||
       nextStep !== step ||
+      nextPosition !== position ||
       nextCssPosition !== cssPosition ||
       nextHolePadding !== holePadding ||
       nextXPos !== xPos ||
@@ -290,7 +300,7 @@ export default class JoyrideTooltip extends React.Component {
   }
 
   setOpts(props) {
-    const { animate, standalone, step, xPos } = props;
+    const { animate, position, standalone, step, xPos } = props;
 
     const target = document.querySelector(step.selector);
     const tooltip = document.querySelector('.joyride-tooltip');
@@ -298,7 +308,7 @@ export default class JoyrideTooltip extends React.Component {
     const opts = {
       classes: ['joyride-tooltip'],
       rect: target.getBoundingClientRect(),
-      positionClass: step.position
+      positionClass: position,
     };
 
     opts.positonBaseClass = opts.positionClass.match(/-/) ? opts.positionClass.split('-')[0] : opts.positionClass;
