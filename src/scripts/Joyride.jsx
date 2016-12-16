@@ -842,7 +842,7 @@ class Joyride extends React.Component {
    * @param {string} [options.action] - The action being undertaken.
    * @param {Array} [options.steps] - The array of step objects that is going to be rendered
    */
-  toggleTooltip({ show, index, action, steps = this.props.steps }) {
+  toggleTooltip({ show = !this.state.showTooltip, index = this.state.index, action = '', steps = this.props.steps }) {
     let nextIndex = index;
     const nextStep = steps[nextIndex];
 
