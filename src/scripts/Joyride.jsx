@@ -144,10 +144,10 @@ class Joyride extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.logger('joyride:willReceiveProps', [nextProps]);
     const { play, shouldPlay, standaloneTooltip } = this.state;
     const { keyboardNavigation, run, steps } = this.props;
     const stepsChanged = (nextProps.steps !== steps);
-    this.logger('joyride:willReceiveProps', [nextProps]);
     const runChanged = (nextProps.run !== run);
     let shouldStart = false;
 
