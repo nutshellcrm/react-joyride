@@ -359,7 +359,7 @@ class Joyride extends React.Component {
     const shouldDisplay = Boolean(steps[nextIndex]) && showTooltip;
 
     this.logger('joyride:next', ['new index:', nextIndex]);
-    this.toggleTooltip(shouldDisplay, nextIndex, 'next');
+    this.toggleTooltip({ show: shouldDisplay, index: nextIndex, action: 'next' });
   }
 
   /**
@@ -373,7 +373,7 @@ class Joyride extends React.Component {
     const shouldDisplay = Boolean(steps[previousIndex]) && showTooltip;
 
     this.logger('joyride:back', ['new index:', previousIndex]);
-    this.toggleTooltip(shouldDisplay, previousIndex, 'next');
+    this.toggleTooltip({ show: shouldDisplay, index: previousIndex, action: 'next' });
   }
 
   /**
@@ -626,11 +626,11 @@ class Joyride extends React.Component {
       }
 
       if (intKey === 27) {
-        this.toggleTooltip(false, index + 1, 'esc');
+        this.toggleTooltip({ show: false, index: index + 1, action: 'esc' });
       }
       else if ([13, 32].indexOf(intKey) > -1) {
         hasSteps = Boolean(steps[index + 1]);
-        this.toggleTooltip(hasSteps, index + 1, 'next');
+        this.toggleTooltip({ show: hasSteps, index: index + 1, action: 'next' });
       }
     }
   }
@@ -688,7 +688,7 @@ class Joyride extends React.Component {
       step: steps[index]
     });
 
-    this.toggleTooltip(true, index, `beacon:${e.type}`);
+    this.toggleTooltip({ show: true, index, action: `beacon:${e.type}` });
   }
 
   /**
@@ -729,7 +729,7 @@ class Joyride extends React.Component {
           && ['close', 'skip'].indexOf(dataType) === -1
           && Boolean(steps[newIndex]);
 
-        this.toggleTooltip(shouldDisplay, newIndex, dataType);
+        this.toggleTooltip({ show: shouldDisplay, index: newIndex, action: dataType });
       }
 
       if (e.target.className === 'joyride-overlay') {
@@ -754,11 +754,12 @@ class Joyride extends React.Component {
    * Toggle Tooltip's visibility
    *
    * @private
-   * @param {Boolean} show - Render the tooltip or the beacon
-   * @param {Number}  [index]  - The tour's new index, defaults to current index
-   * @param {string}  [action] - The action being undertaken.
+   * @param {Object}  [arg]        - Immediately destructured argument object
+   * @param {Boolean} [arg.show]   - Render the tooltip or the beacon, defaults to opposite of current show
+   * @param {Number}  [arg.index]  - The tour's new index, defaults to current index
+   * @param {string}  [arg.action] - The action being undertaken.
    */
-  toggleTooltip(show = !this.state.showTooltip, index = this.state.index, action = '') {
+  toggleTooltip({ show = !this.state.showTooltip, index = this.state.index, action = '' }) {
     const { steps } = this.props;
     let nextIndex = index;
     const nextStep = steps[nextIndex];
