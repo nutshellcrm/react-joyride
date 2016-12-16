@@ -2,7 +2,7 @@ import React from 'react';
 import scroll from 'scroll';
 import autobind from 'react-autobind';
 import nested from 'nested-property';
-import { getRootEl, logger, sanitizeSelector } from './utils';
+import { getRootEl, logger, sanitizeSelector, getDocHeight } from './utils';
 
 import Beacon from './Beacon';
 import Tooltip from './Tooltip';
@@ -963,6 +963,13 @@ class Joyride extends React.Component {
       position = 'bottom';
     }
 
+    if (/^top/.test(position) && rect.top - (component.height + tooltipOffset) < 0) {
+      position = 'bottom';
+    }
+    else if (/^bottom/.test(position) && rect.bottom + (component.height + tooltipOffset) > getDocHeight()) {
+      position = 'top';
+    }
+
     return position;
   }
 
@@ -997,9 +1004,7 @@ class Joyride extends React.Component {
    */
   preventWindowOverflow(value, axis, elWidth, elHeight) {
     const winWidth = window.innerWidth;
-    const body = document.body;
-    const html = document.documentElement;
-    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    const docHeight = getDocHeight();
     let newValue = value;
 
     if (axis === 'x') {
