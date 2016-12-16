@@ -153,7 +153,7 @@ Listing of custom-properties and their default values:
   background-image: url('<svg width="var(--joyride-tooltip-arrow-size, 36px)" height="var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2))" version="1.1" xmlns="http://www.w3.org/2000/svg"><polygon points="0, 0 8, 8 16,0" fill="var(--joyride-tooltip-bg-color, #fff)" transform="scale(var(--joyride-tooltip-arrow-scale, 2.25)) rotate(180 8 4)"></polygon></svg>');
   height: var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2));
   left: 50%;
-  top: calc(0px - var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2)) - 2);
+  top: calc(0px - var(--joyride-tooltip-arrow-height, calc(var(--joyride-tooltip-arrow-size, 36px) / 2)) + 2px);
   transform: translateX(-50%);
   width: var(--joyride-tooltip-arrow-size, 36px);
 }
