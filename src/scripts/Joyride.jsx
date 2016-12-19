@@ -105,15 +105,15 @@ class Joyride extends React.Component {
   };
 
   componentWillMount() {
-    const { stepIndex, run, autoStart } = this.props;
+    const { stepIndex, run, autoStart, steps } = this.props;
 
-    // A non-zero step index was provided
-    if (stepIndex) {
-      this.toggleTooltip({ show: run && autoStart, index: stepIndex });
+    // If we are supposed to be running when mounting, we need to start
+    if (run) {
+      this.start(autoStart, steps, stepIndex);
     }
-    // No stepIndex is specified, so start from beginning
-    else if (run) {
-      this.start(autoStart);
+    // Otherwise, just update the index
+    else {
+      this.toggleTooltip({ show: false, index: stepIndex });
     }
   }
 
@@ -190,8 +190,8 @@ class Joyride extends React.Component {
     if (stepIndexChanged) {
       const hasStep = nextProps.steps[nextProps.stepIndex];
       const shouldDisplay = hasStep && nextProps.autoStart;
-      if (nextProps.stepIndex === 0 && shouldStart) {
-        this.start(nextProps.autoStart, nextProps.steps, 0);
+      if (runChanged && shouldStart) {
+        this.start(nextProps.autoStart, nextProps.steps, nextProps.stepIndex);
       }
       else {
         this.toggleTooltip({ show: shouldDisplay, index: nextProps.stepIndex, steps: nextProps.steps, action: 'jump' });
