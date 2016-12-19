@@ -191,7 +191,6 @@ class Joyride extends React.Component {
       const hasStep = nextProps.steps[nextProps.stepIndex];
       const shouldDisplay = hasStep && nextProps.autoStart;
       if (nextProps.stepIndex === 0 && shouldStart) {
-        console.log('going to start');
         this.start(nextProps.autoStart, nextProps.steps, 0);
       }
       else {
