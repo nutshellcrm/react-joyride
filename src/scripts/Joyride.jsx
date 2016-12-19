@@ -518,7 +518,12 @@ class Joyride extends React.Component {
     if (debug) {
       console.log(`%c${type}`, 'color: #760bc5; font-weight: bold; font-size: 12px;'); //eslint-disable-line no-console
       if (msg) {
-        logger.apply(console, msg);
+        if (Array.isArray(msg)) {
+          logger.apply(console, msg);
+        }
+        else {
+          logger.apply(console, [msg]);
+        }
       }
     }
   }
