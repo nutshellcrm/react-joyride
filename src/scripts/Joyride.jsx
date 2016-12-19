@@ -996,7 +996,7 @@ class Joyride extends React.Component {
    */
   calcPosition(step) {
     const { tooltipOffset } = this.props;
-    const body = document.body.getBoundingClientRect();
+    const body = document.body;
     const target = this.getStepTargetElement(step);
     const component = this.getElementDimensions();
     const width = component.width || DEFAULTS.minWidth;
@@ -1006,14 +1006,14 @@ class Joyride extends React.Component {
     if (/^left/.test(position) && rect.left - (width + tooltipOffset) < 0) {
       position = 'top';
     }
-    else if (/^right/.test(position) && (rect.left + rect.width + (width + tooltipOffset)) > body.width) {
+    else if (/^right/.test(position) && (rect.left + rect.width + (width + tooltipOffset)) > body.getBoundingClientRect().width) {
       position = 'bottom';
     }
 
-    if (/^top/.test(position) && rect.top - (component.height + tooltipOffset) < 0) {
+    if (/^top/.test(position) && (rect.top + body.scrollTop) - (component.height + tooltipOffset) < 0) {
       position = 'bottom';
     }
-    else if (/^bottom/.test(position) && rect.bottom + (component.height + tooltipOffset) > getDocHeight()) {
+    else if (/^bottom/.test(position) && (rect.bottom + body.scrollTop) + (component.height + tooltipOffset) > getDocHeight()) {
       position = 'top';
     }
 
