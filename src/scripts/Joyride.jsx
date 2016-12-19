@@ -628,6 +628,7 @@ class Joyride extends React.Component {
     const { callback } = this.props;
 
     if (typeof callback === 'function') {
+      this.logger('joyride:triggerCallback', [options]);
       callback(options);
     }
   }
