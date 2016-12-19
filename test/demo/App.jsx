@@ -46,6 +46,7 @@ export default class Demo extends React.Component {
     };
 
     this.onClickStart = this.onClickStart.bind(this);
+    this.handleJoyrideCallback = this.handleJoyrideCallback.bind(this);
   }
 
   componentDidMount() {
@@ -67,19 +68,24 @@ export default class Demo extends React.Component {
   }
 
   onClickStart(e) {
-    const state = this.state;
     e.preventDefault();
 
-    if (!state.running && state.steps.length) {
-      this.setState({
-        running: true
-      });
+    this.setState({
+      running: true,
+      step: 0,
+    });
+  }
 
-      this.joyride.start();
-      return;
+  handleJoyrideCallback(result) {
+    if (result.type === 'step:before') {
+      // Keep internal state in sync with joyride
+      this.setState({ step: result.index });
     }
 
-    this.joyride.reset(true);
+    if (result.type === 'finished' && this.state.running) {
+      // Need to set our running state to false, so we can restart if we click start again.
+      this.setState({ running: false });
+    }
   }
 
   render() {
@@ -87,8 +93,11 @@ export default class Demo extends React.Component {
       <div className="demo">
         <Joyride
           ref={c => (this.joyride = c)}
+          run={this.state.running}
           steps={this.state.steps}
+          stepIndex={this.state.step}
           scrollToFirstStep={true}
+          callback={this.handleJoyrideCallback}
           debug={false} />
         <div className="hero">
           <div className="container">
