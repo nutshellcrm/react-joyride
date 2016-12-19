@@ -103,7 +103,6 @@ Listing of custom-properties and their default values:
 .joyride-hole {
   border-radius: var(--joyride-hole-border-radius, 4px);
   box-shadow: 0 0 0 9999px var(--joyride-overlay-color, rgba(0, 0, 0, 0.5)), var(--joyride-hole-shadow, 0 0 15px rgba(0, 0, 0, 0.5));
-  position: absolute;
 }
 
 .joyride-hole.safari {
