@@ -2,7 +2,7 @@ import React from 'react';
 import scroll from 'scroll';
 import autobind from 'react-autobind';
 import nested from 'nested-property';
-import { getRootEl, logger, sanitizeSelector, getDocHeight } from './utils';
+import { getRootEl, logger, sanitizeSelector, getDocHeight, wrapTargetWithHandler, unwrapTargetHandler } from './utils';
 
 import Beacon from './Beacon';
 import Tooltip from './Tooltip';
@@ -62,6 +62,7 @@ class Joyride extends React.Component {
     holePadding: React.PropTypes.number,
     keyboardNavigation: React.PropTypes.bool,
     locale: React.PropTypes.object,
+    onTargetClick: React.PropTypes.func,
     resizeDebounce: React.PropTypes.bool,
     resizeDebounceDelay: React.PropTypes.number,
     run: React.PropTypes.bool,
@@ -210,7 +211,7 @@ class Joyride extends React.Component {
       const hasStep = nextProps.steps[nextProps.stepIndex];
       const shouldDisplay = hasStep && nextProps.autoStart;
       if (runChanged && shouldStart) {
-        this.start(nextProps.autoStart, nextProps.steps, nextProps.stepIndex);
+        this.start(nextProps.autoStart, nextProps.steps, nextProps.stepIndex, nextProps.onTargetClick);
       }
       // Next prop is set to run, and the index has changed, but for some reason joyride is not running
       // (maybe this is because of a target not mounted, and the app wants to skip to another step)
@@ -224,7 +225,7 @@ class Joyride extends React.Component {
 
     // Did not change the index, but need to start up the joyride
     else if (shouldStart) {
-      this.start(nextProps.autoStart, nextProps.steps);
+      this.start(nextProps.autoStart, nextProps.steps, undefined, nextProps.onTargetClick);
     }
 
     // Update keyboard listeners if necessary
@@ -411,8 +412,9 @@ class Joyride extends React.Component {
    * @param {boolean} [autorun] - Starts with the first tooltip opened
    * @param {Array} [steps] - Array of steps, defaults to this.props.steps
    * @param {number} [startIndex] - Optional step index to start joyride at
+   * @param {function} [onTargetClick] - Optional handler to wrap around target click handler
    */
-  start(autorun, steps = this.props.steps, startIndex = this.state.index) {
+  start(autorun, steps = this.props.steps, startIndex = this.state.index, onTargetClick = this.props.onTargetClick) {
     const hasMountedTarget = Boolean(this.getStepTargetElement(steps[startIndex]));
     const shouldRenderTooltip = (autorun === true) && hasMountedTarget;
 
@@ -421,6 +423,17 @@ class Joyride extends React.Component {
       msg: ['autorun:', autorun === true],
       debug: this.props.debug,
     });
+
+    const nextStep = steps[startIndex];
+    if (nextStep) {
+      const target = this.getStepTargetElement(nextStep);
+      if (target && typeof onTargetClick === 'function') {
+        wrapTargetWithHandler(target, onTargetClick);
+      }
+      else if (target) {
+        unwrapTargetHandler(target);
+      }
+    }
 
     this.setState({
       action: 'start',
@@ -900,9 +913,18 @@ class Joyride extends React.Component {
    * @param {string} [options.action] - The action being undertaken.
    * @param {Array} [options.steps] - The array of step objects that is going to be rendered
    */
-  toggleTooltip({ show, index = this.state.index, action, steps = this.props.steps }) {
+  toggleTooltip({ show, index = this.state.index, action, steps = this.props.steps, onTargetClick = this.props.onTargetClick }) {
     const nextStep = steps[index];
-    const hasMountedTarget = Boolean(this.getStepTargetElement(nextStep));
+    const target = this.getStepTargetElement(nextStep);
+    const hasMountedTarget = Boolean(target);
+    if (nextStep && hasMountedTarget) {
+      if (typeof onTargetClick === 'function') {
+        wrapTargetWithHandler(target, onTargetClick);
+      }
+      else {
+        unwrapTargetHandler(target);
+      }
+    }
 
     this.setState({
       action,
