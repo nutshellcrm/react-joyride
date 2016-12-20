@@ -104,8 +104,19 @@ class Joyride extends React.Component {
     type: 'single'
   };
 
-  componentWillMount() {
-    const { stepIndex, run, autoStart, steps } = this.props;
+  componentDidMount() {
+    const {
+      autoStart,
+      keyboardNavigation,
+      resizeDebounce,
+      resizeDebounceDelay,
+      run,
+      stepIndex,
+      steps,
+      type
+    } = this.props;
+
+    this.logger('joyride:initialized', [this.props]);
 
     // If we are supposed to be running when mounting, we need to start
     if (run) {
@@ -115,17 +126,6 @@ class Joyride extends React.Component {
     else {
       this.toggleTooltip({ show: false, index: stepIndex });
     }
-  }
-
-  componentDidMount() {
-    const {
-      keyboardNavigation,
-      resizeDebounce,
-      resizeDebounceDelay,
-      type
-    } = this.props;
-
-    this.logger('joyride:initialized', [this.props]);
 
     if (resizeDebounce) {
       let timeoutId;
