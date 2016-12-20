@@ -15,9 +15,24 @@ export default class JoyrideTooltip extends React.Component {
     holePadding: React.PropTypes.number,
     onClick: React.PropTypes.func.isRequired,
     onRender: React.PropTypes.func.isRequired,
+
+    // position of tooltip with respect to target
+    position: React.PropTypes.oneOf([
+      'top', 'top-left', 'top-right',
+      'bottom', 'bottom-left', 'bottom-right',
+      'right', 'left',
+    ]).isRequired,
+
+    // sanitized selector string
+    selector: React.PropTypes.string.isRequired,
+
     showOverlay: React.PropTypes.bool.isRequired,
     standalone: React.PropTypes.bool,
     step: React.PropTypes.object.isRequired,
+
+    // DOM element to target
+    target: React.PropTypes.object.isRequired,
+
     type: React.PropTypes.string.isRequired,
     xPos: React.PropTypes.oneOfType([
       React.PropTypes.number,
@@ -61,6 +76,7 @@ export default class JoyrideTooltip extends React.Component {
       animate: nextAnimate,
       standalone: nextStandalone,
       step: nextStep,
+      position: nextPosition,
       cssPosition: nextCssPosition,
       holePadding: nextHolePadding,
       xPos: nextXPos,
@@ -71,6 +87,7 @@ export default class JoyrideTooltip extends React.Component {
       animate,
       standalone,
       step,
+      position,
       cssPosition,
       holePadding,
       xPos,
@@ -82,6 +99,7 @@ export default class JoyrideTooltip extends React.Component {
       nextAnimate !== animate ||
       nextStandalone !== standalone ||
       nextStep !== step ||
+      nextPosition !== position ||
       nextCssPosition !== cssPosition ||
       nextHolePadding !== holePadding ||
       nextXPos !== xPos ||
@@ -103,9 +121,9 @@ export default class JoyrideTooltip extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { onRender, step } = this.props;
+    const { onRender, selector } = this.props;
 
-    if (prevProps.step.selector !== step.selector) {
+    if (prevProps.selector !== selector) {
       this.forceUpdate();
       onRender();
     }
@@ -286,15 +304,14 @@ export default class JoyrideTooltip extends React.Component {
   }
 
   setOpts(props) {
-    const { animate, standalone, step, xPos } = props;
+    const { animate, position, standalone, target, xPos } = props;
 
-    const target = document.querySelector(step.selector);
     const tooltip = document.querySelector('.joyride-tooltip');
 
     const opts = {
       classes: ['joyride-tooltip'],
       rect: target.getBoundingClientRect(),
-      positionClass: step.position
+      positionClass: position,
     };
 
     opts.positonBaseClass = opts.positionClass.match(/-/) ? opts.positionClass.split('-')[0] : opts.positionClass;
@@ -343,9 +360,7 @@ export default class JoyrideTooltip extends React.Component {
   };
 
   render() {
-    const { buttons, disableOverlay, onClick, showOverlay, step, type } = this.props;
-
-    const target = document.querySelector(step.selector);
+    const { buttons, disableOverlay, onClick, selector, showOverlay, step, target, type } = this.props;
 
     if (!target) {
       return undefined;
@@ -395,7 +410,7 @@ export default class JoyrideTooltip extends React.Component {
     }
 
     output.tooltipComponent = (
-      <div className={opts.classes.join(' ')} style={styles.tooltip} data-target={step.selector}>
+      <div className={opts.classes.join(' ')} style={styles.tooltip} data-target={selector}>
         <div
           className={`joyride-tooltip__triangle joyride-tooltip__triangle-${opts.positionClass}`}
           style={styles.arrow} />

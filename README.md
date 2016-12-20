@@ -40,7 +40,7 @@ var App = React.createClass({
 Don't forget to pass a `ref` to the component.
 
 ### Styles
- 
+
 If you are using **SCSS** (and you should):
 
 ```scss
@@ -74,20 +74,15 @@ Add a custom method to include steps to your component state (or store).
 
 ```javascript
 addSteps: function (steps) {
-  if (!Array.isArray(steps)) {
-    steps = [steps];
-  }
-  
-  if (!steps.length) {
-    return false;
-  }
-  
+  if (!steps || typeof steps !== 'object') return false;
+
   this.setState(function(currentState) {
-    currentState.steps = currentState.steps.concat(this.joyride.parseSteps(steps));
+    currentState.steps = currentState.steps.concat(steps);
     return currentState;
   });
 }
 
+// Render a standalone tooltip
 addTooltip: function(data) {
   this.joyride.addTooltip(data);
 }
@@ -126,7 +121,11 @@ You can change the initial options passing props to the component.
 
 **steps** {array}: The tour's steps. Defaults to `[]`
 
+**stepIndex** {number}: Jump to a specific step index.
+
 **run** {bool}: Run/stop the tour.
+
+**autoStart** {bool}: Open the tooltip automatically when started, without showing a beacon.
 
 **keyboardNavigation** {bool}: Toggle keyboard navigation (esc, space bar, return). Defaults to `true`
 
@@ -160,16 +159,16 @@ You can change the initial options passing props to the component.
 
 **debug** {bool}: Console.log Joyride's inner actions. Defaults to `false`
 
-**callback** {function}: It will be called when the tour's state changes and returns a single parameter: 
+**callback** {function}: It will be called when the tour's state changes and returns a single parameter:
 
-* entering a step `{ type: 'step:before', index: 0, step: {...} }` 
-* rendering the beacon `{ type: 'beacon:before', step: {...} }` 
-* triggering the beacon `{ type: 'beacon:trigger', step: {...} }` 
-* rendering the tooltip `{ type: 'tooltip:before', step: {...} }` 
-* closing a step `{ type: 'step:after', step: {...} }` 
-* clicking on the overlay (if not disabled) `{ type: 'overlay:click', step: {...} }` 
-* clicking on the hole `{ type: 'hole:click', step: {...} }` 
-* the tour ends. `{ type: 'finished', steps: [{...}], skipped: boolean }` 
+* entering a step `{ type: 'step:before', index: 0, step: {...} }`
+* rendering the beacon `{ type: 'beacon:before', step: {...} }`
+* triggering the beacon `{ type: 'beacon:trigger', step: {...} }`
+* rendering the tooltip `{ type: 'tooltip:before', step: {...} }`
+* closing a step `{ type: 'step:after', step: {...} }`
+* clicking on the overlay (if not disabled) `{ type: 'overlay:click', step: {...} }`
+* clicking on the hole `{ type: 'hole:click', step: {...} }`
+* the tour ends. `{ type: 'finished', steps: [{...}], skipped: boolean }`
 
 The callback object also receives an `action` string (start|next|back) and the step `index`.
 
@@ -238,7 +237,7 @@ Retrieve the current progress of your tour. The object returned looks like this:
 }}
 ```
 
-### this.joyride.parseSteps(steps)
+### **Deprecated** this.joyride.parseSteps(steps)
 
 Parse the incoming steps, check if it's already rendered and returns an array with valid items
 
@@ -414,5 +413,3 @@ Copyright © 2016 Gil Barbara - [MIT License](LICENSE)
 ---
 
 Inspired by [react-tour-guide](https://github.com/jakemmarsh/react-tour-guide) and [jquery joyride tour](http://zurb.com/playground/jquery-joyride-feature-tour-plugin)
- 
-
