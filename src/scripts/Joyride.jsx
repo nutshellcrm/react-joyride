@@ -110,6 +110,7 @@ class Joyride extends React.Component {
       resizeDebounce,
       resizeDebounceDelay,
       run,
+      stepIndex,
       steps,
       type
     } = this.props;
@@ -120,9 +121,14 @@ class Joyride extends React.Component {
       debug: this.props.debug,
     });
 
+    // If we are supposed to be running when mounting, we need to start
     const stepsAreValid = this.checkStepsValidity(steps);
     if (steps && stepsAreValid && run) {
-      this.start(autoStart);
+      this.start(autoStart, steps, stepIndex);
+    }
+    // Otherwise, just update the index
+    else {
+      this.toggleTooltip({ show: false, index: stepIndex });
     }
 
     if (resizeDebounce) {
