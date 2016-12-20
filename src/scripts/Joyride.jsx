@@ -2,7 +2,7 @@ import React from 'react';
 import scroll from 'scroll';
 import autobind from 'react-autobind';
 import nested from 'nested-property';
-import { getRootEl } from './utils';
+import { getRootEl, getDocHeight } from './utils';
 
 import Beacon from './Beacon';
 import Tooltip from './Tooltip';
@@ -822,7 +822,7 @@ class Joyride extends React.Component {
     const { showTooltip, standaloneTooltip } = this.state;
     const { tooltipOffset } = this.props;
     const displayTooltip = standaloneTooltip ? true : showTooltip;
-    const body = document.body.getBoundingClientRect();
+    const body = document.body;
     const target = document.querySelector(step.selector);
     const component = this.getElementDimensions((displayTooltip ? '.joyride-tooltip' : '.joyride-beacon'));
     const rect = target.getBoundingClientRect();
@@ -833,8 +833,15 @@ class Joyride extends React.Component {
     if (/^left/.test(position) && rect.left - (component.width + tooltipOffset) < 0) {
       position = 'top';
     }
-    else if (/^right/.test(position) && (rect.left + rect.width + (component.width + tooltipOffset)) > body.width) {
+    else if (/^right/.test(position) && (rect.left + rect.width + (component.width + tooltipOffset)) > body.getBoundingClientRect().width) {
       position = 'bottom';
+    }
+
+    if (/^top/.test(position) && (rect.top + body.scrollTop) - (component.height + tooltipOffset) < 0) {
+      position = 'bottom';
+    }
+    else if (/^bottom/.test(position) && (rect.bottom + body.scrollTop) + (component.height + tooltipOffset) > getDocHeight()) {
+      position = 'top';
     }
 
     return position;
@@ -865,9 +872,7 @@ class Joyride extends React.Component {
    */
   preventWindowOverflow(value, axis, elWidth, elHeight) {
     const winWidth = window.innerWidth;
-    const body = document.body;
-    const html = document.documentElement;
-    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    const docHeight = getDocHeight();
     let newValue = value;
 
     if (axis === 'x') {
