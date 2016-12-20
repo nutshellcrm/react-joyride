@@ -159,6 +159,8 @@ You can change the initial options passing props to the component.
 
 **debug** {bool}: Console.log Joyride's inner actions. Defaults to `false`
 
+**onTargetClick** {func}: A click handler for the current step's target.  The function will be provided two parameters: the target DOM element and (`target`) a callback function (`cb`).  When finished doing whatever it needs to do, the function provided to `onTargetClick` should call `cb()` to execute the default click handler of the target element.
+
 **callback** {function}: It will be called when the tour's state changes and returns a single parameter:
 
 * entering a step `{ type: 'step:before', index: 0, step: {...} }`
