@@ -415,7 +415,9 @@ class Joyride extends React.Component {
    * @param {function} [onTargetClick] - Optional handler to wrap around target click handler
    */
   start(autorun, steps = this.props.steps, startIndex = this.state.index, onTargetClick = this.props.onTargetClick) {
-    const hasMountedTarget = Boolean(this.getStepTargetElement(steps[startIndex]));
+    const nextStep = steps[startIndex];
+    const target = this.getStepTargetElement(nextStep);
+    const hasMountedTarget = Boolean(target);
     const shouldRenderTooltip = (autorun === true) && hasMountedTarget;
 
     logger({
@@ -424,11 +426,11 @@ class Joyride extends React.Component {
       debug: this.props.debug,
     });
 
-    const nextStep = steps[startIndex];
-    if (nextStep) {
-      const target = this.getStepTargetElement(nextStep);
-      if (target && typeof onTargetClick === 'function') {
-        wrapTargetWithHandler(target, onTargetClick);
+    if (nextStep && hasMountedTarget) {
+      // The onTargetClick from the step takes precedence
+      const targetClickHandler = nextStep.onTargetClick || onTargetClick;
+      if (target && typeof targetClickHandler === 'function') {
+        wrapTargetWithHandler(target, targetClickHandler);
       }
       else if (target) {
         unwrapTargetHandler(target);
@@ -918,8 +920,10 @@ class Joyride extends React.Component {
     const target = this.getStepTargetElement(nextStep);
     const hasMountedTarget = Boolean(target);
     if (nextStep && hasMountedTarget) {
-      if (typeof onTargetClick === 'function') {
-        wrapTargetWithHandler(target, onTargetClick);
+      // The onTargetClick from the step takes precedence
+      const targetClickHandler = nextStep.onTargetClick || onTargetClick;
+      if (typeof targetClickHandler === 'function') {
+        wrapTargetWithHandler(target, targetClickHandler);
       }
       else {
         unwrapTargetHandler(target);
