@@ -373,9 +373,11 @@ class Joyride extends React.Component {
     const { scrollToFirstStep, scrollToSteps, steps } = this.props;
     const step = steps[index];
     const scrollTop = this.getScrollTop();
-    const shouldScroll = (
-      scrollToFirstStep || (index > 0 || prevState.index > index))
-      && (step && !step.isFixed); // fixed steps don't need to scroll
+    const preventStepScroll = (step && step.scrollToStep === false);
+    const shouldScroll =
+      (scrollToFirstStep || (index > 0 || prevState.index > index))
+      && (step && !step.isFixed) // fixed steps don't need to scroll
+      && !preventStepScroll;
 
     if (shouldRedraw && step) {
       this.calcPlacement();
