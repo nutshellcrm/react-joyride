@@ -275,6 +275,7 @@ There are some usable options but you can pass custom parameters.
 - `type`: The event type that trigger the tooltip: `click` or `hover`. Defaults to `click`
 - `isFixed`: If `true`, the tooltip will remain in a fixed position within the viewport. Defaults to `false`.
 - `hideTooltip`: Will prevent the step's tooltip from rendering.  This is useful if you only want an overlay and hole, for example to point out something a user should click on without words explaining it.
+- `scrollToStep`: Set to `false` to prevent scrolling the tooltip into view.  Defaults to `true`
 - `onTargetClick`: function to execute before target's default click handler.  Takes precedence over a `onTargetClick` prop provided to `<Joyride />`, but behaves the same way as that prop.
 - `style`: An object with stylesheet options.
 - `holePadding`: The gap around the target inside the hole. Defaults to `5`.
