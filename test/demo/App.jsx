@@ -5,6 +5,10 @@ export default class Demo extends React.Component {
   constructor(props) {
     super(props);
 
+    this.onClickStart = this.onClickStart.bind(this);
+    this.handleNextButtonClick = this.handleNextButtonClick.bind(this);
+    this.handleJoyrideCallback = this.handleJoyrideCallback.bind(this);
+
     this.state = {
       running: false,
       steps: [
@@ -25,6 +29,7 @@ export default class Demo extends React.Component {
           text: 'Can be advanced by clicking an element in an overlay hole.',
           selector: '.mission button',
           position: 'bottom',
+          onTargetClick: this.handleNextButtonClick,
           style: {
             beacon: {
               offsetY: 20
@@ -48,10 +53,6 @@ export default class Demo extends React.Component {
       ],
       step: 0,
     };
-
-    this.onClickStart = this.onClickStart.bind(this);
-    this.handleNextButtonClick = this.handleNextButtonClick.bind(this);
-    this.handleJoyrideCallback = this.handleJoyrideCallback.bind(this);
   }
 
   componentDidMount() {
@@ -93,19 +94,22 @@ export default class Demo extends React.Component {
     }
   }
 
-  handleNextButtonClick() {
-    if (this.state.step === 1) {
+  handleNextButtonClick(target, cb) {
+    this.setState({
+      running: false,
+      step: 2,
+    });
+    // allow the tooltip time to hide before restarting
+    setTimeout(() => {
       this.setState({
-        running: false,
-        step: 2,
+        running: true,
       });
-      // allow the tooltip time to hide before restarting
-      setTimeout(() => {
-        this.setState({
-          running: true,
-        });
-      }, 500);
-    }
+      cb();
+    }, 500);
+  }
+
+  logClicked() {
+    console.log('Mission Accomplished'); // eslint-disable-line no-console
   }
 
   render() {
@@ -134,7 +138,7 @@ export default class Demo extends React.Component {
 
         <div className="site__section mission">
           <div className="container">
-            <h2><span>Mission</span></h2><button onClick={this.handleNextButtonClick}>Advance</button>
+            <h2><span>Mission</span></h2><button onClick={this.logClicked}>Advance</button>
           </div>
         </div>
         <div className="site__section about">
