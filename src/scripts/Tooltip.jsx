@@ -1,5 +1,5 @@
 import React from 'react';
-import { browser } from './utils';
+import { browser, getDocHeight } from './utils';
 
 export default class JoyrideTooltip extends React.Component {
   constructor(props) {
@@ -453,7 +453,7 @@ export default class JoyrideTooltip extends React.Component {
 
     const overlayStyles = {
       cursor: disableOverlay ? 'default' : 'pointer',
-      height: document.body.clientHeight,
+      height: getDocHeight(),
       pointerEvents: this.state.mouseOverHole ? 'none' : 'auto',
     };
 
