@@ -378,9 +378,11 @@ class Joyride extends React.Component {
 
     const nextStep = steps[startIndex];
     if (nextStep) {
+      // The onTargetClick from the step takes precedence
+      const targetClickHandler = nextStep.onTargetClick || onTargetClick;
       const target = this.getStepTargetElement(nextStep);
-      if (target && typeof onTargetClick === 'function') {
-        wrapTargetWithHandler(target, onTargetClick);
+      if (target && typeof targetClickHandler === 'function') {
+        wrapTargetWithHandler(target, targetClickHandler);
       }
       else if (target) {
         unwrapTargetHandler(target);
@@ -865,13 +867,15 @@ class Joyride extends React.Component {
     let nextIndex = index;
     const nextStep = steps[nextIndex];
     if (nextStep) {
+      // The onTargetClick from the step takes precedence
+      const targetClickHandler = nextStep.onTargetClick || onTargetClick;
       const target = this.getStepTargetElement(nextStep);
       if (!target) {
         console.warn('Target not mounted, skipping...', nextStep, action); //eslint-disable-line no-console
         nextIndex += action === 'back' ? -1 : 1;
       }
-      else if (typeof onTargetClick === 'function') {
-        wrapTargetWithHandler(target, onTargetClick);
+      else if (typeof targetClickHandler === 'function') {
+        wrapTargetWithHandler(target, targetClickHandler);
       }
       else {
         unwrapTargetHandler(target);
