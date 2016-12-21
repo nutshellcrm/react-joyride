@@ -276,6 +276,7 @@ There are some usable options but you can pass custom parameters.
 - `isFixed`: If `true`, the tooltip will remain in a fixed position within the viewport. Defaults to `false`.
 - `onTargetClick`: function to execute before target's default click handler.  Takes precedence over a `onTargetClick` prop provided to `<Joyride />`, but behaves the same way as that prop.
 - `style`: An object with stylesheet options.
+- `holePadding`: The gap around the target inside the hole. Defaults to `5`.
 
 
 **Extra option for standalone tooltips**
