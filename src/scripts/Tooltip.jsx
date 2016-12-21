@@ -216,9 +216,12 @@ export default class JoyrideTooltip extends React.Component {
       }
     };
 
+    const targetTop = isFixed ? opts.rect.top : (opts.rect.top - document.body.getBoundingClientRect().top);
+    const targetLeft = isFixed ? opts.rect.left : (opts.rect.left - document.body.getBoundingClientRect().left);
+
     styles.hole = {
-      top: Math.round((opts.rect.top - (isFixed ? 0 : document.body.getBoundingClientRect().top)) - holePadding),
-      left: Math.round(opts.rect.left - holePadding),
+      top: Math.round(targetTop - holePadding),
+      left: Math.round(targetLeft - holePadding),
       width: Math.round(opts.rect.width + (holePadding * 2)),
       height: Math.round(opts.rect.height + (holePadding * 2)),
       position: isFixed ? 'fixed' : 'absolute',
