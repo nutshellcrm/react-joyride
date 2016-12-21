@@ -159,6 +159,8 @@ You can change the initial options passing props to the component.
 
 **debug** {bool}: Console.log Joyride's inner actions. Defaults to `false`
 
+**onTargetClick** {func}: A click handler for the current step's target.  The function will be provided two parameters: the target DOM element and (`target`) a callback function (`cb`).  When finished doing whatever it needs to do, the function provided to `onTargetClick` should call `cb()` to execute the default click handler of the target element.
+
 **callback** {function}: It will be called when the tour's state changes and returns a single parameter:
 
 * entering a step `{ type: 'step:before', index: 0, step: {...} }`
@@ -272,6 +274,7 @@ There are a few usable options but you can pass custom parameters.
 - `position`: Relative position of you beacon and tooltip. It can be one of these:`top`, `top-left`, `top-right`, `bottom`, `bottom-left`, `bottom-right`, `right` and `left`. This defaults to `top`.
 - `type`: The event type that trigger the tooltip: `click` or `hover`. Defaults to `click`
 - `isFixedPosition`: Forces the tooltip to be fixed position so that scrolling the page will not affect the position of the tooltip
+- `onTargetClick`: function to execute before target's default click handler.  Takes precedence over a `onTargetClick` prop provided to `<Joyride />`, but behaves the same way as that prop.
 
 Extra option for standalone tooltips
 

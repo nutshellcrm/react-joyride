@@ -1,5 +1,7 @@
 /*eslint-disable no-nested-ternary */
 
+const wrappedListeners = {};
+
 /**
  * Convert hex to RGB
  *
@@ -83,4 +85,43 @@ export function sanitizeSelector(selector) {
     }
   }
   return selector;
+}
+
+/**
+ * Add a click event handler to a target DOM element.
+ * The handler will be called with a reference to the DOM element and a callback.
+ * The callback should be executed when the handler is finished with its work.
+ * The callback will remove the wrapping event listener and then click the target.
+ *
+ * This has the effect of adding handler code to execute before the click is passed along.
+ *
+ * Only one target can be wrapped at any given time.
+ *
+ * @param   {Object}   target  - DOM element being targeted by a tooltip
+ * @param   {function} handler - The function to execute when target is clicked.
+ *                               It is provided a callback as a second argument,
+ *                               which should be called by the handler to perform target's original click handler.
+ * @returns {void}
+ */
+export function wrapTargetWithHandler(target, handler) {
+  if (wrappedListeners[target]) target.removeEventListener('click', wrappedListeners[target]);
+  wrappedListeners[target] = (e) => {
+    e.stopPropagation();
+    handler(target, () => {
+      target.removeEventListener('click', wrappedListeners[target]);
+      target.click(e);
+    });
+  };
+  target.addEventListener('click', wrappedListeners[target]);
+}
+
+/**
+ * Remove target handler wrapper applied from `wrapTargetWithHandler`
+ *
+ * @param   {Object} target - The DOM element to remove the click handler wrapper from
+ * @returns {void}
+ */
+export function unwrapTargetHandler(target) {
+  if (wrappedListeners[target]) target.removeEventListener('click', wrappedListeners[target]);
+  wrappedListeners[target] = undefined;
 }
