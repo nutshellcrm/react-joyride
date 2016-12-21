@@ -269,11 +269,12 @@ var steps = this.joyride.parseSteps({
 There are a few usable options but you can pass custom parameters.
 
 - `title`: The title of the tooltip
-- `text`: The tooltip's body text **(required)**
-- `selector`: The target DOM selector of your feature **(required)**
+- `text`: The tooltip's body text
+- `selector`: **(required)** The target DOM selector of your feature
 - `position`: Relative position of you beacon and tooltip. It can be one of these:`top`, `top-left`, `top-right`, `bottom`, `bottom-left`, `bottom-right`, `right` and `left`. This defaults to `top`.
 - `type`: The event type that trigger the tooltip: `click` or `hover`. Defaults to `click`
 - `isFixedPosition`: Forces the tooltip to be fixed position so that scrolling the page will not affect the position of the tooltip
+- `hideTooltip`: Will prevent the step's tooltip from rendering.  This is useful if you only want an overlay and hole, for example to point out something a user should click on without words explaining it.
 - `onTargetClick`: function to execute before target's default click handler.  Takes precedence over a `onTargetClick` prop provided to `<Joyride />`, but behaves the same way as that prop.
 - `holePadding`: The gap around the target inside the hole. Defaults to `5`.
 
