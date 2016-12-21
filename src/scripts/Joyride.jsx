@@ -1070,7 +1070,6 @@ class Joyride extends React.Component {
     const { index, shouldRedraw, shouldRenderTooltip, standaloneData, xPos, yPos } = this.state;
     const {
       disableOverlay,
-      holePadding,
       locale,
       showBackButton,
       showOverlay,
@@ -1085,6 +1084,7 @@ class Joyride extends React.Component {
     const target = this.getStepTargetElement(step);
     let component;
 
+    const holePadding = (step && typeof step.holePadding !== 'undefined') ? step.holePadding : this.props.holePadding;
     const shouldShowOverlay = standaloneData ? false : showOverlay;
     const buttons = {
       primary: locale.close
