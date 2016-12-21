@@ -368,6 +368,7 @@ export default class JoyrideTooltip extends React.Component {
       return undefined;
     }
 
+    const hideTooltip = (step.hideTooltip === true);
     const opts = this.state.opts;
     const styles = this.state.styles;
     const output = {};
@@ -462,7 +463,7 @@ export default class JoyrideTooltip extends React.Component {
         data-type="close"
         onClick={!disableOverlay ? onClick : undefined}>
         {output.hole}
-        {output.tooltipComponent}
+        {!hideTooltip ? output.tooltipComponent : undefined}
       </div>
     );
   }
