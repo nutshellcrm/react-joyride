@@ -130,6 +130,7 @@ export function sanitizeSelector(selector) {
  * @returns {void}
  */
 export function wrapTargetWithHandler(target, handler) {
+  if (wrappedListeners[target]) target.removeEventListener('click', wrappedListeners[target]);
   wrappedListeners[target] = (e) => {
     e.stopPropagation();
     handler(target, () => {
