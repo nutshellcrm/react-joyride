@@ -1,6 +1,6 @@
 /*eslint-disable no-nested-ternary */
 
-let wrappedListener;
+const wrappedListeners = {};
 
 /**
  * Convert hex to RGB
@@ -130,14 +130,14 @@ export function sanitizeSelector(selector) {
  * @returns {void}
  */
 export function wrapTargetWithHandler(target, handler) {
-  wrappedListener = (e) => {
+  wrappedListeners[target] = (e) => {
     e.stopPropagation();
     handler(target, () => {
-      target.removeEventListener('click', wrappedListener);
+      target.removeEventListener('click', wrappedListeners[target]);
       target.click(e);
     });
   };
-  target.addEventListener('click', wrappedListener);
+  target.addEventListener('click', wrappedListeners[target]);
 }
 
 /**
@@ -147,6 +147,6 @@ export function wrapTargetWithHandler(target, handler) {
  * @returns {void}
  */
 export function unwrapTargetHandler(target) {
-  if (wrappedListener) target.removeEventListener('click', wrappedListener);
-  wrappedListener = undefined;
+  if (wrappedListeners[target]) target.removeEventListener('click', wrappedListeners[target]);
+  wrappedListeners[target] = undefined;
 }
