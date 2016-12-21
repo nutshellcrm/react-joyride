@@ -274,6 +274,7 @@ There are a few usable options but you can pass custom parameters.
 - `position`: Relative position of you beacon and tooltip. It can be one of these:`top`, `top-left`, `top-right`, `bottom`, `bottom-left`, `bottom-right`, `right` and `left`. This defaults to `top`.
 - `type`: The event type that trigger the tooltip: `click` or `hover`. Defaults to `click`
 - `isFixedPosition`: Forces the tooltip to be fixed position so that scrolling the page will not affect the position of the tooltip
+- `onTargetClick`: function to execute before target's default click handler.  Takes precedence over a `onTargetClick` prop provided to `<Joyride />`, but behaves the same way as that prop.
 
 Extra option for standalone tooltips
 
