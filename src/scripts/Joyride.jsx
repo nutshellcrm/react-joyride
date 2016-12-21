@@ -310,7 +310,9 @@ class Joyride extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const { index, redraw, play, shouldPlay, standaloneTooltip } = this.state;
     const { scrollToFirstStep, scrollToSteps, steps } = this.props;
-    const shouldScroll = scrollToFirstStep || (index > 0 || prevState.index > index);
+    const step = steps[index];
+    const preventStepScroll = (step && step.scrollToStep === false);
+    const shouldScroll = !preventStepScroll && (scrollToFirstStep || (index > 0 || prevState.index > index));
 
     if (redraw && steps[index]) {
       this.calcPlacement();
