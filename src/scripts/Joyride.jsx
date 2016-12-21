@@ -999,7 +999,6 @@ class Joyride extends React.Component {
     const { index, redraw, showTooltip, standaloneTooltip, xPos, yPos } = this.state;
     const {
       disableOverlay,
-      holePadding,
       locale,
       showBackButton,
       showOverlay,
@@ -1014,6 +1013,7 @@ class Joyride extends React.Component {
     const target = this.getStepTargetElement(step);
     const targetCssPosition = target ? target.style.position : null;
     const cssPosition = step && step.isFixedPosition ? 'fixed' : targetCssPosition;
+    const holePadding = (step && typeof step.holePadding !== 'undefined') ? step.holePadding : this.props.holePadding;
     const shouldShowOverlay = standaloneTooltip ? false : showOverlay;
     const buttons = {
       primary: locale.close

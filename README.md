@@ -275,6 +275,7 @@ There are a few usable options but you can pass custom parameters.
 - `type`: The event type that trigger the tooltip: `click` or `hover`. Defaults to `click`
 - `isFixedPosition`: Forces the tooltip to be fixed position so that scrolling the page will not affect the position of the tooltip
 - `onTargetClick`: function to execute before target's default click handler.  Takes precedence over a `onTargetClick` prop provided to `<Joyride />`, but behaves the same way as that prop.
+- `holePadding`: The gap around the target inside the hole. Defaults to `5`.
 
 Extra option for standalone tooltips
 
