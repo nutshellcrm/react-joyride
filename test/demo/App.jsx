@@ -5,6 +5,10 @@ export default class Demo extends React.Component {
   constructor(props) {
     super(props);
 
+    this.onClickStart = this.onClickStart.bind(this);
+    this.handleNextButtonClick = this.handleNextButtonClick.bind(this);
+    this.handleJoyrideCallback = this.handleJoyrideCallback.bind(this);
+
     this.state = {
       autoStart: false,
       running: false,
@@ -26,6 +30,7 @@ export default class Demo extends React.Component {
           selector: '.mission button',
           position: 'bottom',
           allowClicksThruHole: true,
+          onTargetClick: this.handleNextButtonClick,
           style: {
             beacon: {
               offsetY: 20
@@ -65,10 +70,6 @@ export default class Demo extends React.Component {
       ],
       step: 0,
     };
-
-    this.onClickStart = this.onClickStart.bind(this);
-    this.handleNextButtonClick = this.handleNextButtonClick.bind(this);
-    this.handleJoyrideCallback = this.handleJoyrideCallback.bind(this);
   }
 
   componentDidMount() {
@@ -115,10 +116,9 @@ export default class Demo extends React.Component {
     });
   }
 
-  handleNextButtonClick() {
-    if (this.state.step === 1) {
-      this.joyride.next();
-    }
+  handleNextButtonClick(target, cb) {
+    cb();
+    this.joyride.next();
   }
 
   handleJoyrideCallback(result) {
@@ -144,19 +144,8 @@ export default class Demo extends React.Component {
     }
   }
 
-  handleNextButtonClick() {
-    if (this.state.step === 1) {
-      this.setState({
-        running: false,
-        step: 2,
-      });
-      // allow the tooltip time to hide before restarting
-      setTimeout(() => {
-        this.setState({
-          running: true,
-        });
-      }, 500);
-    }
+  logClicked() {
+    console.log('Mission Accomplished'); // eslint-disable-line no-console
   }
 
   render() {
@@ -205,7 +194,7 @@ export default class Demo extends React.Component {
           <div className="demo__section mission">
             <div className="container">
               <h2><span>Mission</span></h2>
-              <button className="btn btn-secondary mission__button" onClick={this.handleNextButtonClick}>Advance
+              <button className="btn btn-secondary mission__button" onClick={this.logClicked}>Advance
               </button>
             </div>
           </div>
