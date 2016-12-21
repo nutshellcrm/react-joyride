@@ -1,5 +1,5 @@
 import React from 'react';
-import { browser } from './utils';
+import { browser, getDocHeight } from './utils';
 
 export default class JoyrideTooltip extends React.Component {
   constructor(props) {
@@ -210,6 +210,7 @@ export default class JoyrideTooltip extends React.Component {
    */
   setStyles(stepStyles, opts, props) {
     const { cssPosition, holePadding, xPos, yPos } = props;
+    const isFixed = (cssPosition === 'fixed');
     const styles = {
       arrow: {
         left: opts.arrowPosition
@@ -218,18 +219,21 @@ export default class JoyrideTooltip extends React.Component {
       header: {},
       hole: {},
       tooltip: {
-        position: cssPosition === 'fixed' ? 'fixed' : 'absolute',
+        position: isFixed ? 'fixed' : 'absolute',
         top: Math.round(yPos),
         left: Math.round(xPos)
       }
     };
 
+    const targetTop = isFixed ? opts.rect.top : (opts.rect.top - document.body.getBoundingClientRect().top);
+    const targetLeft = isFixed ? opts.rect.left : (opts.rect.left - document.body.getBoundingClientRect().left);
+
     styles.hole = {
-      top: Math.round((opts.rect.top - document.body.getBoundingClientRect().top) - holePadding),
-      left: Math.round(opts.rect.left - holePadding),
+      top: Math.round(targetTop - holePadding),
+      left: Math.round(targetLeft - holePadding),
       width: Math.round(opts.rect.width + (holePadding * 2)),
       height: Math.round(opts.rect.height + (holePadding * 2)),
-      position: cssPosition === 'fixed' ? 'fixed' : 'absolute',
+      position: isFixed ? 'fixed' : 'absolute',
     };
 
     styles.buttons = {
@@ -348,8 +352,12 @@ export default class JoyrideTooltip extends React.Component {
   handleMouseMove = (e) => {
     const event = e || window.e;
     const hole = this.state.styles.hole;
-    const inHoleHeight = (event.pageY >= hole.top && event.pageY <= hole.top + hole.height);
-    const inHoleWidth = (event.pageX >= hole.left && event.pageX <= hole.left + hole.width);
+    const scrollOffsetY = hole.position === 'fixed' ? document.body.scrollTop : 0;
+    const scrollOffsetX = hole.position === 'fixed' ? document.body.scrollLeft : 0;
+    const mouseY = event.pageY - scrollOffsetY;
+    const mouseX = event.pageX - scrollOffsetX;
+    const inHoleHeight = (mouseY >= hole.top && mouseY <= hole.top + hole.height);
+    const inHoleWidth = (mouseX >= hole.left && mouseX <= hole.left + hole.width);
     const inHole = inHoleWidth && inHoleHeight;
     if (inHole && !this.state.mouseOverHole) {
       this.setState({ mouseOverHole: true });
@@ -449,7 +457,7 @@ export default class JoyrideTooltip extends React.Component {
 
     const overlayStyles = {
       cursor: disableOverlay ? 'default' : 'pointer',
-      height: document.body.clientHeight,
+      height: getDocHeight(),
       pointerEvents: this.state.mouseOverHole ? 'none' : 'auto',
     };
 
