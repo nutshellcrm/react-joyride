@@ -110,6 +110,7 @@ Listing of custom-properties and their default values:
 }
 
 .joyride-tooltip {
+  pointer-events: auto;
   background-color: var(--joyride-tooltip-bg-color, #fff);
   border-radius: var(--joyride-tooltip-border-radius, 4px);
   color: var(--joyride-tooltip-color, #555);
