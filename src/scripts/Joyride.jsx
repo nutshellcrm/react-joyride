@@ -53,6 +53,7 @@ class Joyride extends React.Component {
   }
 
   static propTypes = {
+    allowClicksInHole: React.PropTypes.bool,
     autoStart: React.PropTypes.bool,
     callback: React.PropTypes.func,
     debug: React.PropTypes.bool,
@@ -78,6 +79,7 @@ class Joyride extends React.Component {
   };
 
   static defaultProps = {
+    allowClickInHole: true,
     autoStart: false,
     debug: false,
     holePadding: 5,
@@ -1086,6 +1088,7 @@ class Joyride extends React.Component {
     const target = this.getStepTargetElement(step);
     let component;
 
+    const allowClicksInHole = (step && typeof step.allowClicksInHole !== 'undefined') ? step.allowClicksInHole : this.props.allowClicksInHole;
     const holePadding = (step && typeof step.holePadding !== 'undefined') ? step.holePadding : this.props.holePadding;
     const shouldShowOverlay = standaloneData ? false : showOverlay;
     const buttons = {
@@ -1138,6 +1141,7 @@ class Joyride extends React.Component {
       }
 
       component = React.createElement(Tooltip, {
+        allowClicksInHole,
         animate: xPos > -1 && !shouldRedraw,
         buttons,
         disableOverlay,

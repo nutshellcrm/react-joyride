@@ -8,6 +8,7 @@ export default class JoyrideTooltip extends React.Component {
   }
 
   static propTypes = {
+    allowClicksInHole: React.PropTypes.bool,
     animate: React.PropTypes.bool.isRequired,
     buttons: React.PropTypes.object.isRequired,
     disableOverlay: React.PropTypes.bool,
@@ -59,13 +60,14 @@ export default class JoyrideTooltip extends React.Component {
     this.forceUpdate();
     onRender();
 
-    if (this.props.showOverlay) {
+    if (this.props.showOverlay && (this.props.allowClicksInHole !== false)) {
       document.addEventListener('mousemove', this.handleMouseMove, false);
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const {
+      allowClicksInHole: nextAllowClicksInHole,
       animate: nextAnimate,
       standalone: nextStandalone,
       step: nextStep,
@@ -76,6 +78,7 @@ export default class JoyrideTooltip extends React.Component {
       showOverlay: nextShowOverlay,
     } = nextProps;
     const {
+      allowClicksInHole,
       animate,
       standalone,
       step,
@@ -100,8 +103,19 @@ export default class JoyrideTooltip extends React.Component {
       this.setState({ styles, opts });
     }
 
+    // If showOverlay changed, we might need to allow clicks in the overlay hole
     if (nextShowOverlay !== showOverlay) {
-      if (nextShowOverlay) {
+      if (nextShowOverlay && (nextAllowClicksInHole !== false)) {
+        document.addEventListener('mousemove', this.handleMouseMove, false);
+      }
+      else {
+        document.removeEventListener('mousemove', this.handleMouseMove, false);
+      }
+    }
+
+    // If allowClickInHole changed, we need to enable or disable clicking in the overlay hole
+    if (nextAllowClicksInHole !== allowClicksInHole) {
+      if (nextAllowClicksInHole !== false) {
         document.addEventListener('mousemove', this.handleMouseMove, false);
       }
       else {
