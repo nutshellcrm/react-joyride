@@ -147,6 +147,8 @@ You can change the initial options passing props to the component.
 
 **showOverlay** {bool}: Display an overlay with holes above your steps (for tours only). Defaults to `true`
 
+**allowClicksInHole** {bool}: Allow mouse clicks and touch events within overlay hole.  Defaults to `true`
+
 **showSkipButton** {bool}: Display a link to skip the tour. Defaults to `false`
 
 **showStepsProgress** {bool}: Display the tour progress in the next button *e.g. 2/5* in `continuous` tours. Defaults to `false`
@@ -160,6 +162,7 @@ You can change the initial options passing props to the component.
 **debug** {bool}: Console.log Joyride's inner actions. Defaults to `false`
 
 **onTargetClick** {func}: A click handler for the current step's target.  The function will be provided two parameters: the target DOM element and (`target`) a callback function (`cb`).  When finished doing whatever it needs to do, the function provided to `onTargetClick` should call `cb()` to execute the default click handler of the target element.
+
 
 **callback** {function}: It will be called when the tour's state changes and returns a single parameter:
 
@@ -275,6 +278,7 @@ There are some usable options but you can pass custom parameters.
 - `type`: The event type that trigger the tooltip: `click` or `hover`. Defaults to `click`
 - `isFixed`: If `true`, the tooltip will remain in a fixed position within the viewport. Defaults to `false`.
 - `hideTooltip`: Will prevent the step's tooltip from rendering.  This is useful if you only want an overlay and hole, for example to point out something a user should click on without words explaining it.
+- `allowClicksInHole`: Set to `false` to prevent pointer-events (hover, clicks, etc) or touch events within overlay hole.  Defaults to `true`. Takes precedence over a `allowClicksInHole` prop provided to `<Joyride />`
 - `scrollToStep`: Set to `false` to prevent scrolling the tooltip into view.  Defaults to `true`
 - `onTargetClick`: function to execute before target's default click handler.  Takes precedence over a `onTargetClick` prop provided to `<Joyride />`, but behaves the same way as that prop.
 - `style`: An object with stylesheet options.
