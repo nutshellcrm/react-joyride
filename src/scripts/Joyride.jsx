@@ -25,6 +25,7 @@ const callbackTypes = {
   BEACON_BEFORE: 'beacon:before',
   BEACON_TRIGGER: 'beacon:trigger',
   TOOLTIP_BEFORE: 'tooltip:before',
+  TOOLTIP_AFTER: 'tooltip:after',
   STEP_AFTER: 'step:after',
   STANDALONE_BEFORE: 'standalone:before',
   STANDALONE_AFTER: 'standalone:after',
@@ -348,6 +349,12 @@ class Joyride extends React.Component {
       }
       // Going to show a beacon
       else {
+        this.triggerCallback({
+          action: nextState.action || (index === 0 ? 'autostart' : ''),
+          index,
+          type: callbackTypes.TOOLTIP_AFTER,
+          step
+        });
         this.triggerCallback({
           action: nextState.action,
           index: nextState.index,

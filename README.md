@@ -170,6 +170,7 @@ You can change the initial options passing props to the component.
 * rendering the beacon `{ type: 'beacon:before', step: {...} }`
 * triggering the beacon `{ type: 'beacon:trigger', step: {...} }`
 * rendering the tooltip `{ type: 'tooltip:before', step: {...} }`
+* closing the tooltip without advancing `{ type: 'tooltip:after', step: {...} }`
 * clicking on the overlay (if not disabled) `{ type: 'overlay:click', step: {...} }`
 * clicking on the hole `{ type: 'hole:click', step: {...} }`
 * the target could not be found `{ type: 'error:target_not_found', step: {...} }`
