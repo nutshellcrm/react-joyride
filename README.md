@@ -166,10 +166,10 @@ You can change the initial options passing props to the component.
 **callback** {function}: It will be called when the tour's state changes and returns a single parameter:
 
 * entering a step `{ type: 'step:before', index: 0, step: {...} }`
+* leaving a step `{ type: 'step:after', step: {...} }`
 * rendering the beacon `{ type: 'beacon:before', step: {...} }`
 * triggering the beacon `{ type: 'beacon:trigger', step: {...} }`
 * rendering the tooltip `{ type: 'tooltip:before', step: {...} }`
-* closing a step `{ type: 'step:after', step: {...} }`
 * clicking on the overlay (if not disabled) `{ type: 'overlay:click', step: {...} }`
 * clicking on the hole `{ type: 'hole:click', step: {...} }`
 * the target could not be found `{ type: 'error:target_not_found', step: {...} }`

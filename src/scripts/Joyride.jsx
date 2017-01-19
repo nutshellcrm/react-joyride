@@ -860,7 +860,10 @@ class Joyride extends React.Component {
       e.preventDefault();
       e.stopPropagation();
       const tooltip = document.querySelector('.joyride-tooltip');
-      let newIndex = index + (dataType === 'back' ? -1 : 1);
+      let newIndex = index;
+      if (dataType !== 'close') {
+        newIndex = index + (dataType === 'back' ? -1 : 1);
+      }
 
       if (dataType === 'skip') {
         this.setState({
