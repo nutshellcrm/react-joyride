@@ -335,7 +335,15 @@ export default class JoyrideTooltip extends React.Component {
     if ((/^bottom$/.test(opts.positionClass) || /^top$/.test(opts.positionClass)) && xPos > -1) {
       opts.tooltip = { width: 450 };
 
-      if (tooltip) {
+      if (tooltip && animate) {
+        // one time event to wait on measuring the tooltip until the animation
+        // has completed
+        tooltip.addEventListener('animationend', () => {
+          opts.tooltip = tooltip.getBoundingClientRect();
+          tooltip.removeEventListener('animationend');
+        });
+      }
+      else if (tooltip) {
         opts.tooltip = tooltip.getBoundingClientRect();
       }
 
