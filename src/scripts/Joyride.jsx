@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import scroll from 'scroll';
-import autobind from 'react-autobind';
 import nested from 'nested-property';
 import { getRootEl, logger, sanitizeSelector, getDocHeight, wrapTargetWithHandler, unwrapTargetHandler } from './utils';
 
@@ -46,7 +45,6 @@ let hasTouch = false;
 class Joyride extends React.Component {
   constructor(props) {
     super(props);
-    autobind(this);
 
     this.state = { ...defaultState };
 
@@ -156,7 +154,7 @@ class Joyride extends React.Component {
     window.addEventListener('resize', this.listeners.resize);
 
     if (keyboardNavigation && type === 'continuous') {
-      this.listeners.keyboard = this.onKeyboardNavigation;
+      this.listeners.keyboard = this.handleKeyboardNavigation;
       document.body.addEventListener('keydown', this.listeners.keyboard);
     }
 
@@ -236,7 +234,7 @@ class Joyride extends React.Component {
       ((!keyboardNavigation && nextProps.keyboardNavigation) || keyboardNavigation)
       && nextProps.type === 'continuous'
     ) {
-      this.listeners.keyboard = this.onKeyboardNavigation;
+      this.listeners.keyboard = this.handleKeyboardNavigation;
       document.body.addEventListener('keydown', this.listeners.keyboard);
     }
     else if (
@@ -594,14 +592,14 @@ class Joyride extends React.Component {
     const eventType = data.event || 'click';
 
     if (eventType === 'hover') {
-      this.listeners.tooltips[`${key}mouseenter`] = { event: 'mouseenter', cb: this.onClickStandaloneTrigger };
-      this.listeners.tooltips[`${key}mouseleave`] = { event: 'mouseleave', cb: this.onClickStandaloneTrigger };
+      this.listeners.tooltips[`${key}mouseenter`] = { event: 'mouseenter', cb: this.handleClickStandaloneTrigger };
+      this.listeners.tooltips[`${key}mouseleave`] = { event: 'mouseleave', cb: this.handleClickStandaloneTrigger };
 
       el.addEventListener('mouseenter', this.listeners.tooltips[`${key}mouseenter`].cb);
       el.addEventListener('mouseleave', this.listeners.tooltips[`${key}mouseleave`].cb);
     }
 
-    this.listeners.tooltips[`${key}click`] = { event: 'click', cb: this.onClickStandaloneTrigger };
+    this.listeners.tooltips[`${key}click`] = { event: 'click', cb: this.handleClickStandaloneTrigger };
     el.addEventListener('click', this.listeners.tooltips[`${key}click`].cb);
   }
 
@@ -783,7 +781,7 @@ class Joyride extends React.Component {
    * @private
    * @param {Event} e - Keyboard event
    */
-  onKeyboardNavigation(e) {
+  handleKeyboardNavigation = (e) => {
     const { index, shouldRenderTooltip } = this.state;
     const { steps } = this.props;
     const intKey = (window.Event) ? e.which : e.keyCode;
@@ -802,7 +800,7 @@ class Joyride extends React.Component {
         this.toggleTooltip({ show: hasSteps, index: index + 1, action: 'next' });
       }
     }
-  }
+  };
 
   /**
    * Tooltip event listener
@@ -810,7 +808,7 @@ class Joyride extends React.Component {
    * @private
    * @param {Event} e - Click event
    */
-  onClickStandaloneTrigger(e) {
+  handleClickStandaloneTrigger = (e) => {
     e.preventDefault();
     const { isRunning, standaloneData } = this.state;
     let tooltipData = e.currentTarget.dataset.tooltip;
@@ -836,7 +834,7 @@ class Joyride extends React.Component {
         document.querySelector('.joyride-tooltip__close').click();
       }
     }
-  }
+  };
 
   /**
    * Beacon click event listener
@@ -844,7 +842,7 @@ class Joyride extends React.Component {
    * @private
    * @param {Event} e - Click event
    */
-  onClickBeacon(e) {
+  handleClickBeacon = (e) => {
     e.preventDefault();
     const { index } = this.state;
     const { steps } = this.props;
@@ -857,7 +855,7 @@ class Joyride extends React.Component {
     });
 
     this.toggleTooltip({ show: true, index, action: `beacon:${e.type}` });
-  }
+  };
 
   /**
    * Tooltip click event listener
@@ -865,7 +863,7 @@ class Joyride extends React.Component {
    * @private
    * @param {Event} e - Click event
    */
-  onClickTooltip(e) {
+  handleClickTooltip = (e) => {
     const { index, shouldRun } = this.state;
     const { steps, type } = this.props;
     const el = e.currentTarget.className.indexOf('joyride-') === 0 && e.currentTarget.tagName === 'A' ? e.currentTarget : e.target;
@@ -919,11 +917,11 @@ class Joyride extends React.Component {
         });
       }
     }
-  }
+  };
 
-  onRenderTooltip() {
+  handleRenderTooltip = () => {
     this.calcPlacement();
-  }
+  };
 
   /**
    * Toggle Tooltip's visibility
@@ -1217,8 +1215,8 @@ class Joyride extends React.Component {
         type,
         xPos,
         yPos,
-        onClick: this.onClickTooltip,
-        onRender: this.onRenderTooltip
+        onClick: this.handleClickTooltip,
+        onRender: this.handleRenderTooltip
       });
     }
     else {
@@ -1226,7 +1224,7 @@ class Joyride extends React.Component {
         step,
         xPos,
         yPos,
-        onTrigger: this.onClickBeacon,
+        onTrigger: this.handleClickBeacon,
         eventType: step.type || 'click'
       });
     }
