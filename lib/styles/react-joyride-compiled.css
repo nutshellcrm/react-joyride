@@ -167,7 +167,6 @@
     outline: none;
     padding: 6px 12px;
     text-decoration: none;
-    -webkit-transition: background-color 0.2s ease-in-out;
     transition: background-color 0.2s ease-in-out; }
     .joyride-tooltip__button--primary:active, .joyride-tooltip__button--primary:focus, .joyride-tooltip__button--primary:hover {
       background-color: #ff1f5a;
