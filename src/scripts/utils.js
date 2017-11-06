@@ -64,7 +64,8 @@ export const browser = getBrowser();
  * @returns {Element}
  */
 export function getRootEl() {
-  return ['ie', 'firefox'].indexOf(getBrowser()) > -1 ? document.documentElement : document.body;
+  const scrollingElement = document.scrollingElement || document.body;
+  return ['ie', 'firefox'].indexOf(browser) > -1 ? document.documentElement : scrollingElement;
 }
 
 /**
