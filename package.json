@@ -38,12 +38,22 @@
     "exenv": "^1.2.2",
     "is-lite": "^0.2.0",
     "nested-property": "^0.0.7",
+<<<<<<< HEAD
     "react-floater": "^0.5.4",
     "react-proptype-conditional-require": "^1.0.4",
     "scroll": "^2.0.3",
     "scroll-doc": "^0.2.1",
     "scrollparent": "^2.0.1",
     "tree-changes": "^0.3.2"
+=======
+    "prop-types": "^15.6.1",
+    "react-autobind": "^1.0",
+    "scroll": "^2.0"
+  },
+  "peerDependencies": {
+    "react": "^0.14.0 || ^15.0.0",
+    "react-dom": "^0.14.0 || ^15.0.0"
+>>>>>>> Use prop-types package instead of React.PropTypes
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
