@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import scroll from 'scroll';
-import autobind from 'react-autobind';
 import nested from 'nested-property';
 import { getRootEl, logger, sanitizeSelector, getDocHeight, wrapTargetWithHandler, unwrapTargetHandler } from './utils';
 
@@ -36,10 +35,6 @@ const callbackTypes = {
   TARGET_NOT_FOUND: 'error:target_not_found'
 };
 
-const listeners = {
-  tooltips: {}
-};
-
 const DEFAULTS = {
   position: 'top',
   minWidth: 290
@@ -50,9 +45,12 @@ let hasTouch = false;
 class Joyride extends React.Component {
   constructor(props) {
     super(props);
-    autobind(this);
 
     this.state = { ...defaultState };
+
+    this.listeners = {
+      tooltips: {}
+    };
   }
 
   static propTypes = {
@@ -140,7 +138,7 @@ class Joyride extends React.Component {
     if (resizeDebounce) {
       let timeoutId;
 
-      listeners.resize = () => {
+      this.listeners.resize = () => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
           timeoutId = null;
@@ -149,15 +147,15 @@ class Joyride extends React.Component {
       };
     }
     else {
-      listeners.resize = () => {
+      this.listeners.resize = () => {
         this.calcPlacement();
       };
     }
-    window.addEventListener('resize', listeners.resize);
+    window.addEventListener('resize', this.listeners.resize);
 
     if (keyboardNavigation && type === 'continuous') {
-      listeners.keyboard = this.onKeyboardNavigation;
-      document.body.addEventListener('keydown', listeners.keyboard);
+      this.listeners.keyboard = this.handleKeyboardNavigation;
+      document.body.addEventListener('keydown', this.listeners.keyboard);
     }
 
     window.addEventListener('touchstart', function setHasTouch() {
@@ -232,19 +230,19 @@ class Joyride extends React.Component {
 
     // Update keyboard listeners if necessary
     if (
-      !listeners.keyboard &&
+      !this.listeners.keyboard &&
       ((!keyboardNavigation && nextProps.keyboardNavigation) || keyboardNavigation)
       && nextProps.type === 'continuous'
     ) {
-      listeners.keyboard = this.onKeyboardNavigation;
-      document.body.addEventListener('keydown', listeners.keyboard);
+      this.listeners.keyboard = this.handleKeyboardNavigation;
+      document.body.addEventListener('keydown', this.listeners.keyboard);
     }
     else if (
-      listeners.keyboard && keyboardNavigation &&
+      this.listeners.keyboard && keyboardNavigation &&
       (!nextProps.keyboardNavigation || nextProps.type !== 'continuous')
     ) {
-      document.body.removeEventListener('keydown', listeners.keyboard);
-      delete listeners.keyboard;
+      document.body.removeEventListener('keydown', this.listeners.keyboard);
+      delete this.listeners.keyboard;
     }
   }
 
@@ -401,17 +399,24 @@ class Joyride extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', listeners.resize);
+    window.removeEventListener('resize', this.listeners.resize);
 
-    if (listeners.keyboard) {
-      document.body.removeEventListener('keydown', listeners.keyboard);
+    if (this.listeners.keyboard) {
+      document.body.removeEventListener('keydown', this.listeners.keyboard);
     }
 
-    if (Object.keys(listeners.tooltips).length) {
-      Object.keys(listeners.tooltips).forEach((key) => {
-        document.querySelector(key)
-          .removeEventListener(listeners.tooltips[key].event, listeners.tooltips[key].cb);
-        delete listeners.tooltips[key];
+    if (Object.keys(this.listeners.tooltips).length) {
+      Object.keys(this.listeners.tooltips)
+      .map(key => ({
+        el: document.querySelector(key),
+        event: this.listeners.tooltips[key].event,
+        cb: this.listeners.tooltips[key].cb,
+        key
+      }))
+      .filter(({ el }) => !!el)
+      .forEach(({ el, event, cb, key }) => {
+        el.removeEventListener(event, cb);
+        delete this.listeners.tooltips[key];
       });
     }
   }
@@ -587,15 +592,15 @@ class Joyride extends React.Component {
     const eventType = data.event || 'click';
 
     if (eventType === 'hover') {
-      listeners.tooltips[`${key}mouseenter`] = { event: 'mouseenter', cb: this.onClickStandaloneTrigger };
-      listeners.tooltips[`${key}mouseleave`] = { event: 'mouseleave', cb: this.onClickStandaloneTrigger };
+      this.listeners.tooltips[`${key}mouseenter`] = { event: 'mouseenter', cb: this.handleClickStandaloneTrigger };
+      this.listeners.tooltips[`${key}mouseleave`] = { event: 'mouseleave', cb: this.handleClickStandaloneTrigger };
 
-      el.addEventListener('mouseenter', listeners.tooltips[`${key}mouseenter`].cb);
-      el.addEventListener('mouseleave', listeners.tooltips[`${key}mouseleave`].cb);
+      el.addEventListener('mouseenter', this.listeners.tooltips[`${key}mouseenter`].cb);
+      el.addEventListener('mouseleave', this.listeners.tooltips[`${key}mouseleave`].cb);
     }
 
-    listeners.tooltips[`${key}click`] = { event: 'click', cb: this.onClickStandaloneTrigger };
-    el.addEventListener('click', listeners.tooltips[`${key}click`].cb);
+    this.listeners.tooltips[`${key}click`] = { event: 'click', cb: this.handleClickStandaloneTrigger };
+    el.addEventListener('click', this.listeners.tooltips[`${key}click`].cb);
   }
 
   /**
@@ -776,7 +781,7 @@ class Joyride extends React.Component {
    * @private
    * @param {Event} e - Keyboard event
    */
-  onKeyboardNavigation(e) {
+  handleKeyboardNavigation = (e) => {
     const { index, shouldRenderTooltip } = this.state;
     const { steps } = this.props;
     const intKey = (window.Event) ? e.which : e.keyCode;
@@ -795,7 +800,7 @@ class Joyride extends React.Component {
         this.toggleTooltip({ show: hasSteps, index: index + 1, action: 'next' });
       }
     }
-  }
+  };
 
   /**
    * Tooltip event listener
@@ -803,7 +808,7 @@ class Joyride extends React.Component {
    * @private
    * @param {Event} e - Click event
    */
-  onClickStandaloneTrigger(e) {
+  handleClickStandaloneTrigger = (e) => {
     e.preventDefault();
     const { isRunning, standaloneData } = this.state;
     let tooltipData = e.currentTarget.dataset.tooltip;
@@ -829,7 +834,7 @@ class Joyride extends React.Component {
         document.querySelector('.joyride-tooltip__close').click();
       }
     }
-  }
+  };
 
   /**
    * Beacon click event listener
@@ -837,7 +842,7 @@ class Joyride extends React.Component {
    * @private
    * @param {Event} e - Click event
    */
-  onClickBeacon(e) {
+  handleClickBeacon = (e) => {
     e.preventDefault();
     const { index } = this.state;
     const { steps } = this.props;
@@ -850,7 +855,7 @@ class Joyride extends React.Component {
     });
 
     this.toggleTooltip({ show: true, index, action: `beacon:${e.type}` });
-  }
+  };
 
   /**
    * Tooltip click event listener
@@ -858,7 +863,7 @@ class Joyride extends React.Component {
    * @private
    * @param {Event} e - Click event
    */
-  onClickTooltip(e) {
+  handleClickTooltip = (e) => {
     const { index, shouldRun } = this.state;
     const { steps, type } = this.props;
     const el = e.currentTarget.className.indexOf('joyride-') === 0 && e.currentTarget.tagName === 'A' ? e.currentTarget : e.target;
@@ -912,11 +917,11 @@ class Joyride extends React.Component {
         });
       }
     }
-  }
+  };
 
-  onRenderTooltip() {
+  handleRenderTooltip = () => {
     this.calcPlacement();
-  }
+  };
 
   /**
    * Toggle Tooltip's visibility
@@ -1210,8 +1215,8 @@ class Joyride extends React.Component {
         type,
         xPos,
         yPos,
-        onClick: this.onClickTooltip,
-        onRender: this.onRenderTooltip
+        onClick: this.handleClickTooltip,
+        onRender: this.handleRenderTooltip
       });
     }
     else {
@@ -1219,7 +1224,7 @@ class Joyride extends React.Component {
         step,
         xPos,
         yPos,
-        onTrigger: this.onClickBeacon,
+        onTrigger: this.handleClickBeacon,
         eventType: step.type || 'click'
       });
     }
