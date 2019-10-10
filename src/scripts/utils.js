@@ -134,6 +134,7 @@ export function wrapTargetWithHandler(target, handler) {
   if (wrappedListeners[target]) target.removeEventListener('click', wrappedListeners[target]);
   wrappedListeners[target] = (e) => {
     e.stopPropagation();
+    e.preventDefault();
     handler(target, () => {
       target.removeEventListener('click', wrappedListeners[target]);
       target.click(e);
